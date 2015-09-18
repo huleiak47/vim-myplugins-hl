@@ -27,7 +27,7 @@ XPT ''
 '''
 
 
-XPT sb
+XPT #!
 #!/usr/bin/env python
 # -*- coding:`Echo(&fenc)^ -*-
 
