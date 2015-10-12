@@ -6,11 +6,8 @@ XSET date=date()
 #!/usr/bin/env python
 # -*- coding:`Echo(&fenc)^ -*-
 ur'''
-`^
+@brief `^
 @file `file()^
-@author `author^
-@version 1.0
-@date `date^
 @copyright (C) `strftime("%Y")^ `Feitian Technologies Co., Ltd^. All rights reserved.
 '''
 

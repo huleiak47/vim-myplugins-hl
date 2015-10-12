@@ -53,11 +53,8 @@ XPT docf    hint=document\ file
 XSET author=$author
 XSET date=date()
 `$CDL^
- `$CDM^ `^
+ `$CDM^ @brief `^
  `$CDM^ @file `file()^
- `$CDM^ @author `author^
- `$CDM^ @version 1.0
- `$CDM^ @date `date^
  `$CDM^ @copyright Copyright(C) `strftime("%Y")^ `Feitian Technologies Co., Ltd^. All rights reserved.
  `$CDR^
 
