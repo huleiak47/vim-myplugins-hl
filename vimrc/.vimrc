@@ -245,7 +245,7 @@ autocmd FileType * if &ft =~ "python\\|tex\\|autohotkey" | set completeopt=menuo
 set vb t_vb=
 autocmd GUIEnter * set vb t_vb=
 set textwidth=80
-set suffixes=.bak,~,.o,.info,.swp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno
+set suffixes=.bak,~,.o,.info,.swp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv
 "排版设置
 autocmd FileType * setl formatoptions=roqnlmM1
 set formatoptions=roqnlmM1
