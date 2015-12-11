@@ -1047,3 +1047,6 @@ nnoremap <silent> ,rn :let &relativenumber = !&relativenumber<CR>
 
 " autohotkey dict
 autocmd FileType autohotkey setl omnifunc=ahkcomplete#Complete
+
+" pandoc
+autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
