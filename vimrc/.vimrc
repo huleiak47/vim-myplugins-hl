@@ -38,6 +38,7 @@ Plugin 'davidhalter/jedi-vim'
 Plugin 'youjumpiwatch/vim-javacomplete'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
+Plugin 'mattn/emmet-vim'
 
 " --------------------------------------------------------
 
