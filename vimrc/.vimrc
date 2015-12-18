@@ -427,11 +427,7 @@ nnoremap <silent> ,b :BufExplorer<CR>
 "打开NERDTree并且定位到当前文件
 function! CallNERDTree()
     let temp = @/
-    if g:isWin
-        let temp2 = "\\V\\.-" . expand("%") . "\\>"
-    else
-        let temp2 = "\\V\\.\\* \\+" . expand("%") . "*\\?\\$"
-    endif
+    let temp2 = "\\V\\.\\*\\(-\\| \\)\\+" . expand("%") . "*\\?"
     silent edit .
     normal gg
     let @/ = temp2
