@@ -1,5 +1,17 @@
 XPTemplate priority=personal
 
+let s:f = g:XPTfuncs()
+
+fun! s:f.myHeaderSymbol(...) "{{{
+  let h = expand('%:t')
+  let h = substitute(h, '\.', '_', 'g') " replace . with _
+  let h = substitute(h, '.', '\U\0', 'g') " make all characters upper case
+  let t = strftime("%Y%m%d%H%M%S")
+
+  return '__'.h.'_'.t.'__'
+endfunction "}}}
+
+
 XPTvar $CDL     /**
 XPTvar $CDM     *
 XPTvar $CDR     */
@@ -12,7 +24,7 @@ int main`$SPfun^(`$SParg^int argc,`$SPop^char** argv`$SParg^)`$BRfun^{
 }
 
 XPT fun wrap=curosr	hint=func..\ (\ ..\ )\ {...
-int `name^`$SPfun^(`$SParg`param?`$SParg^)`$BRfun^{
+`int` `name^`$SPfun^(`$SParg`param?`$SParg^)`$BRfun^{
     `cursor^
 }
 
@@ -26,3 +38,13 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+XPT once wrap	" #ifndef .. #define ..
+XSET symbol=myHeaderSymbol()
+#ifndef `symbol^
+#define `symbol^
+
+`cursor^
+
+#endif `$CL^ `symbol^
+
