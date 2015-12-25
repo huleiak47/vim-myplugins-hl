@@ -53,4 +53,4 @@ PATH = ['.', r'./src/**']
 TYPE = 'java'
 MAKE = 'scons'
 COMPILER = ['javac']
-VIMCMD = r'let g:java_classpath="C:/Python27/Lib/site-packages/jcbuilder/jclib/jc304/api.jar;C:/Python27/Lib/site-packages/jcbuilder/jclib/gp221/api.jar"'
+VIMCMD = r'let g:java_classpath="C:/Python27/Lib/site-packages/jcbuilder/jclib/jc304/api.jar;C:/Python27/Lib/site-packages/jcbuilder/jclib/gp221/api.jar;C:/Python27/Lib/site-packages/jcbuilder/jclib/ftapi/api.jar"'
