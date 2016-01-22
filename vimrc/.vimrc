@@ -161,13 +161,13 @@ if g:isWin
     if &fenc == "" && &modifiable
         set fenc=utf-8
     endif
-    set fileformats=unix,dos
+    set fileformats=dos,unix
     if g:isGUI
         set encoding=utf-8
         set ambiwidth=double
         "set guifont=droid_sans_mono:h11
         set guifont=Consolas:h11
-        set guifontwide=SimHei:h11
+        set guifontwide=NSimSun:h11
         set linespace=0
         set nocursorline "高亮当前行
         source $VIMRUNTIME/delmenu.vim
