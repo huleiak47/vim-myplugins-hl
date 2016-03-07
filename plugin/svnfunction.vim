@@ -30,5 +30,5 @@ def svn_diff_this_file(args = []):
 
 EOF_PYTHON
 
-command SvnDiff      python svn_diff_this_file()
-command SvnDiffPrev  python svn_diff_this_file(['-rPREV:BASE'])
+command! SvnDiff      python svn_diff_this_file()
+command! SvnDiffPrev  python svn_diff_this_file(['-rPREV:BASE'])

@@ -219,7 +219,7 @@ set hidden
 set fdl=10
 set numberwidth=5
 set number
-set relativenumber
+set norelativenumber
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
