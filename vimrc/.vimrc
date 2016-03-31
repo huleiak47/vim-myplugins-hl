@@ -241,8 +241,8 @@ set autochdir
 set noerrorbells
 set sessionoptions=help,blank,buffers,options,folds,resize,winpos,winsize
 set completeopt=menuone,longest
-autocmd BufEnter * if &ft =~ "python\\|tex\\|autohotkey" | set completeopt=menuone,longest,preview | else | set completeopt=menuone,longest | endif
-autocmd FileType * if &ft =~ "python\\|tex\\|autohotkey" | set completeopt=menuone,longest,preview | else | set completeopt=menuone,longest | endif
+autocmd BufEnter * if &ft =~ "c\\|cpp\\|python\\|tex\\|autohotkey" | set completeopt=menuone,longest,preview | else | set completeopt=menuone,longest | endif
+autocmd FileType * if &ft =~ "c\\|cpp\\|python\\|tex\\|autohotkey" | set completeopt=menuone,longest,preview | else | set completeopt=menuone,longest | endif
 set vb t_vb=
 autocmd GUIEnter * set vb t_vb=
 set textwidth=80
@@ -954,29 +954,20 @@ let g:xptemplate_highlight = 'following,next'
 "
 "
 "clang
-function! InsertTab()
-    let line = getline(".")
-    let start = col(".")
-    if start > 0
-        let start -= 1
-    endif
-    let line = strpart(line, start)
-    if (match(line, "<#[^#]*#>") != -1)
-        return "\<Esc>\<Tab>"
-    else
-        "for xptemplate
-        return "\<C-R>=XPTemplateStart(0,{'k':'<Tab++'})\<CR>"
-        "return '\<Tab>'
+function! UpdateClangQuickFix()
+    if &filetype =~ "c\\|cpp"
+        call g:ClangUpdateQuickFix()
     endif
 endfunction
-autocmd FileType c,cpp imap <buffer><silent><expr> <Tab> InsertTab()
+nnoremap <C-F6>     :call UpdateClangQuickFix()<CR>
 let g:clang_auto_select=2
 let g:clang_complete_copen=1
 let g:clang_hl_errors=1
-let g:clang_preiodic_quickfix=1
-let g:clang_snippets=1
-let g:clang_close_preview=1
+let g:clang_preiodic_quickfix=0
+let g:clang_snippets=0
+let g:clang_close_preview=0
 let g:clang_complete_macros=1
+let g:clang_complete_patterns=1
 let g:clang_trailing_placeholder=1
 let g:clang_make_default_keymappings = 1
 let g:clang_use_library=1
