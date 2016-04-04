@@ -20,7 +20,7 @@ Plugin 'huleiak47/vim-AHKcomplete'
 Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Align'
 Plugin 'bling/vim-airline'
-Plugin 'clang-complete'
+"Plugin 'clang-complete'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'netrw.vim'
@@ -34,11 +34,13 @@ Plugin 'CmdlineComplete'
 Plugin 'DoxygenToolkit.vim'
 Plugin 'Mark'
 Plugin 'Raimondi/delimitMate'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'youjumpiwatch/vim-javacomplete'
+"Plugin 'davidhalter/jedi-vim'
+"Plugin 'youjumpiwatch/vim-javacomplete'
+Plugin 'artur-shaik/vim-javacomplete2'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'mattn/emmet-vim'
+Plugin 'Valloric/YouCompleteMe'
 
 " --------------------------------------------------------
 
@@ -951,32 +953,7 @@ let g:xptemplate_brace_complete = 0
 let g:xptemplate_highlight = 'following,next'
 "in python file do not map ' and "
 "autocmd FileType python,vimproj silent! inoremap <buffer> <silent> ' '| silent! inoremap <buffer> <silent> " "
-"
-"
-"clang
-function! UpdateClangQuickFix()
-    if &filetype =~ "c\\|cpp"
-        call g:ClangUpdateQuickFix()
-    endif
-endfunction
-nnoremap <C-F6>     :call UpdateClangQuickFix()<CR>
-let g:clang_auto_select=2
-let g:clang_complete_copen=1
-let g:clang_hl_errors=1
-let g:clang_preiodic_quickfix=0
-let g:clang_snippets=0
-let g:clang_close_preview=0
-let g:clang_complete_macros=1
-let g:clang_complete_patterns=1
-let g:clang_trailing_placeholder=1
-let g:clang_make_default_keymappings = 1
-let g:clang_use_library=1
-if g:isWin
-let g:clang_library_path=$VIMRUNTIME
-else
-let g:clang_library_path= '/usr/lib/llvm-3.4/lib'
-endif
-let g:clang_user_options='-I' . join(split($CPLUS_INCLUDE_PATH, ';'), ' -I')
+
 
 "airline
 let g:airline#extensions#tagbar#enabled = 0
