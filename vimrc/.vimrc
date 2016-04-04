@@ -242,9 +242,14 @@ set noswapfile
 set autochdir
 set noerrorbells
 set sessionoptions=help,blank,buffers,options,folds,resize,winpos,winsize
-set completeopt=menuone,longest
-autocmd BufEnter * if &ft =~ "c\\|cpp\\|python\\|tex\\|autohotkey" | set completeopt=menuone,longest,preview | else | set completeopt=menuone,longest | endif
-autocmd FileType * if &ft =~ "c\\|cpp\\|python\\|tex\\|autohotkey" | set completeopt=menuone,longest,preview | else | set completeopt=menuone,longest | endif
+set completeopt=menuone,longest,preview
+
+autocmd FileType c,cpp,python nnoremap <buffer> ,gf :YcmCompleter GoToDefinition<CR>
+autocmd FileType c,cpp,python nnoremap <buffer> ,gc :YcmCompleter GoToDeclaration<CR>
+autocmd FileType c,cpp,python nnoremap <buffer> ,gt :YcmCompleter GoTo<CR>
+autocmd FileType c,cpp,python nnoremap <buffer> <C-]> :YcmCompleter GoTo<CR>
+autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yc :YcmCompleter 
+
 set vb t_vb=
 autocmd GUIEnter * set vb t_vb=
 set textwidth=80
