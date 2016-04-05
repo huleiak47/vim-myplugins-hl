@@ -20,7 +20,6 @@ Plugin 'huleiak47/vim-AHKcomplete'
 Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Align'
 Plugin 'bling/vim-airline'
-"Plugin 'clang-complete'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'netrw.vim'
@@ -34,9 +33,7 @@ Plugin 'CmdlineComplete'
 Plugin 'DoxygenToolkit.vim'
 Plugin 'Mark'
 Plugin 'Raimondi/delimitMate'
-"Plugin 'davidhalter/jedi-vim'
-"Plugin 'youjumpiwatch/vim-javacomplete'
-Plugin 'artur-shaik/vim-javacomplete2'
+Plugin 'youjumpiwatch/vim-javacomplete'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'mattn/emmet-vim'
@@ -249,6 +246,18 @@ autocmd FileType c,cpp,python nnoremap <buffer> ,gc :YcmCompleter GoToDeclaratio
 autocmd FileType c,cpp,python nnoremap <buffer> ,gt :YcmCompleter GoTo<CR>
 autocmd FileType c,cpp,python nnoremap <buffer> <C-]> :YcmCompleter GoTo<CR>
 autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yc :YcmCompleter 
+let g:ycm_add_preview_to_completeopt=1
+let g:ycm_complete_in_comments = 1
+let g:ycm_complete_in_strings = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_disable_for_files_larger_than_kb = 10000
+let g:ycm_global_ycm_extra_conf = $HOME . '/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_error_symbol = '**'
+let g:ycm_warning_symbol = '>>'
+let g:ycm_key_list_select_completion = ['<Down>']
+let g:ycm_key_list_previous_completion = ['<Up>']
+
 
 set vb t_vb=
 autocmd GUIEnter * set vb t_vb=
@@ -962,13 +971,6 @@ let g:xptemplate_highlight = 'following,next'
 
 "airline
 let g:airline#extensions#tagbar#enabled = 0
-
-
-" If you prefer the Omni-Completion tip window to close when a selection is
-" made, these lines close it on movement in insert mode or when leaving
-" insert mode
-"autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
 python << EOF
 def save_colorscheme():
