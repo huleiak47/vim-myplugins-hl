@@ -244,7 +244,6 @@ set completeopt=menuone,longest,preview
 autocmd FileType c,cpp,python nnoremap <buffer> ,gf :YcmCompleter GoToDefinition<CR>
 autocmd FileType c,cpp,python nnoremap <buffer> ,gc :YcmCompleter GoToDeclaration<CR>
 autocmd FileType c,cpp,python nnoremap <buffer> ,gt :YcmCompleter GoTo<CR>
-autocmd FileType c,cpp,python nnoremap <buffer> <C-]> :YcmCompleter GoTo<CR>
 autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yc :YcmCompleter 
 let g:ycm_add_preview_to_completeopt=1
 let g:ycm_complete_in_comments = 1
