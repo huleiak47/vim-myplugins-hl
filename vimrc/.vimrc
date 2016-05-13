@@ -38,6 +38,8 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'mattn/emmet-vim'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'kien/ctrlp.vim'
+Plugin 'dkprice/vim-easygrep'
 
 " --------------------------------------------------------
 
@@ -1023,3 +1025,6 @@ autocmd FileType autohotkey setl omnifunc=ahkcomplete#Complete
 
 " pandoc
 autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
+
+" ctrlP
+let g:ctrlp_map = ',cp'
