@@ -1028,3 +1028,6 @@ autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
 
 " ctrlP
 let g:ctrlp_map = ',cp'
+
+" set cursor color
+hi Cursor guifg=#000000 guibg=#00D000
