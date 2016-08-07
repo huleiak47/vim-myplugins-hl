@@ -16,7 +16,6 @@ Plugin 'gmarik/vundle'
 
 Plugin 'huleiak47/vim-myplugins-hl'
 Plugin 'huleiak47/vim-RelatedFile'
-Plugin 'huleiak47/vim-AHKcomplete'
 Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Align'
 Plugin 'bling/vim-airline'
@@ -25,21 +24,51 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'netrw.vim'
 Plugin 'Tagbar'
 Plugin 'VOom'
-Plugin 'vimcaps'
-Plugin 'vim-pandoc/vim-pandoc'
-Plugin 'vim-pandoc/vim-pandoc-syntax'
 Plugin 'xptemplate'
 Plugin 'CmdlineComplete'
 Plugin 'DoxygenToolkit.vim'
 Plugin 'Mark'
 Plugin 'Raimondi/delimitMate'
-Plugin 'youjumpiwatch/vim-javacomplete'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
-Plugin 'mattn/emmet-vim'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'kien/ctrlp.vim'
-Plugin 'dkprice/vim-easygrep'
+"Plugin 'mattn/emmet-vim'
+
+
+
+python << PYTHONEOF
+
+import os
+import vim
+import ctypes
+
+# to speed up loading
+def get_file_type_name():
+    if not vim.eval("g:isWin"):
+        return
+    isdiff = vim.eval("&diff")
+    GetCommandLine = ctypes.windll.kernel32.GetCommandLineA
+    GetCommandLine.restype = ctypes.c_char_p
+    cmdline = GetCommandLine()
+    cmdline = cmdline.strip('"')
+    ftype = os.path.splitext(cmdline)[1].lower()
+    vim.command("let g:file_type_name='%s'" % ftype)
+
+get_file_type_name()
+
+PYTHONEOF
+
+if (g:file_type_name == ".py" || g:file_type_name == ".pyw" || g:file_type_name == ".vprj") && &diff == 0
+    Plugin 'Valloric/YouCompleteMe'
+endif
+
+if g:file_type_name == ".md" || g:file_type_name == ".markdown"
+    Plugin 'vim-pandoc/vim-pandoc'
+    Plugin 'vim-pandoc/vim-pandoc-syntax'
+endif
+
+if g:file_type_name == ".ahk"
+    Plugin 'huleiak47/vim-AHKcomplete'
+endif
 
 " --------------------------------------------------------
 
@@ -1029,5 +1058,3 @@ autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
 " ctrlP
 let g:ctrlp_map = ',cp'
 
-" set cursor color
-hi Cursor guifg=#000000 guibg=#00D000
