@@ -16,23 +16,25 @@ Plugin 'gmarik/vundle'
 
 Plugin 'huleiak47/vim-myplugins-hl'
 Plugin 'huleiak47/vim-RelatedFile'
-Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Align'
 Plugin 'bling/vim-airline'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'netrw.vim'
-Plugin 'Tagbar'
-Plugin 'VOom'
-Plugin 'xptemplate'
 Plugin 'CmdlineComplete'
 Plugin 'DoxygenToolkit.vim'
 Plugin 'Mark'
 Plugin 'Raimondi/delimitMate'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
-"Plugin 'mattn/emmet-vim'
+Plugin 'mattn/emmet-vim'
 
+if &diff == 0
+Plugin 'huleiak47/vim-SimpleIDE'
+Plugin 'Tagbar'
+Plugin 'VOom'
+Plugin 'xptemplate'
+endif
 
 
 python << PYTHONEOF
@@ -56,18 +58,30 @@ def get_file_type_name():
 get_file_type_name()
 
 PYTHONEOF
+if g:isWin
+    if (g:file_type_name == ".py" || g:file_type_name == ".pyw" || g:file_type_name == ".vprj") && &diff == 0
+        Plugin 'Valloric/YouCompleteMe'
+    endif
 
-if (g:file_type_name == ".py" || g:file_type_name == ".pyw" || g:file_type_name == ".vprj") && &diff == 0
-    Plugin 'Valloric/YouCompleteMe'
-endif
+    if g:file_type_name == ".md" || g:file_type_name == ".markdown"
+        Plugin 'vim-pandoc/vim-pandoc'
+        Plugin 'vim-pandoc/vim-pandoc-syntax'
+    endif
 
-if g:file_type_name == ".md" || g:file_type_name == ".markdown"
+    if g:file_type_name == ".ahk"
+        Plugin 'huleiak47/vim-AHKcomplete'
+    endif
+
+else
+
+    if &diff == 0
+        Plugin 'Valloric/YouCompleteMe'
+        Plugin 'huleiak47/vim-AHKcomplete'
+    endif
+
     Plugin 'vim-pandoc/vim-pandoc'
     Plugin 'vim-pandoc/vim-pandoc-syntax'
-endif
 
-if g:file_type_name == ".ahk"
-    Plugin 'huleiak47/vim-AHKcomplete'
 endif
 
 " --------------------------------------------------------
