@@ -1,13 +1,20 @@
-set nocompatible
+
 filetype off
 
 let g:isWin=(has("win32") || has("win64") || has("win32unix"))
 let g:isGUI=has("gui_running")
 let $vimrc = $HOME . "/.vimrc"
 
+if g:isWin
 " vundle plugins
 execute 'set rtp+=' . $VIM . '/plugins/vundle'
 call vundle#rc($VIM . '/plugins')
+else
+" vundle plugins
+execute 'set rtp+=' . $HOME . '/.vimplugins/vundle'
+call vundle#rc($HOME . '/.vimplugins')
+endif
+
 
 "first time use git clone https://github.com/gmarik/vundle.git  ~/.vim/plugins/vundle to get vundle
 "
@@ -36,7 +43,7 @@ Plugin 'VOom'
 Plugin 'xptemplate'
 endif
 
-
+if g:isWin
 python << PYTHONEOF
 
 import os
@@ -58,7 +65,7 @@ def get_file_type_name():
 get_file_type_name()
 
 PYTHONEOF
-if g:isWin
+
     if (g:file_type_name == ".py" || g:file_type_name == ".pyw" || g:file_type_name == ".vprj") && &diff == 0
         Plugin 'Valloric/YouCompleteMe'
     endif
@@ -226,9 +233,9 @@ if g:isWin
     endif
     set termencoding=gbk
 else
-    set guifont=DejaVu\ Sans\ Mono\ 11
+    set guifont=DejaVu\ Sans\ Mono\ 10
     "set guifontwide=WenQuanYi\ Zen\ Hei\ 12
-    set guifontwide=文泉驿等宽微米黑\ 12
+    set guifontwide=文泉驿等宽微米黑\ 10
     set linespace=0
     set fencs=ucs-bom,utf-8,gb18030,big5,latin-1,utf-16
     if &fenc == "" && &modifiable
@@ -255,7 +262,7 @@ endif
 
 if g:isGUI && !exists("s:has_inited")
     let s:has_inited = 1
-    set lines=45 columns=160
+    set lines=40 columns=120
 endif
 
 set textwidth=0
