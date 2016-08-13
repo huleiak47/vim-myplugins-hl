@@ -260,10 +260,10 @@ endif
 
 set textwidth=0
 set hidden
-set fdl=10
+set fdl=99
 set numberwidth=5
 set number
-set norelativenumber
+set relativenumber
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -835,6 +835,7 @@ function! DiffFiles()
     endif
 endfunction
 nnoremap <silent> ,df :call DiffFiles()<CR>
+nnoremap <silent> ,dg :TagbarClose<CR>:Gdiff<CR>
 
 nnoremap <silent> ,dv :SvnDiff<CR>
 nnoremap <silent> ,dr :SvnDiffPrev<CR>
@@ -954,7 +955,7 @@ let g:acp_mappingDriven = 1
 "关于DoxygenToolkit的设置
 let g:DoxygenToolkit_versionString = "1.0"
 let g:DoxygenToolkit_authorName = "Hulei"
-let g:DoxygenToolkit_licenseTag = "Copyright (C) " . strftime("%Y") . " Feitian Technologies Co., Ltd. All rights reserved."
+let g:DoxygenToolkit_licenseTag = "Copyright (C) " . strftime("%Y") . " Nationz Technologies Inc. All rights reserved."
 
 
 autocmd FileType ruby,eruby setl omnifunc=rubycomplete#Complete

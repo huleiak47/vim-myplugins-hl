@@ -8,7 +8,7 @@ XSET date=date()
 ur'''
 @brief `^
 @file `file()^
-@copyright (C) `strftime("%Y")^ `Feitian Technologies Co., Ltd^. All rights reserved.
+@copyright (C) `strftime("%Y")^ `Nationz Technologies Inc^. All rights reserved.
 '''
 
 ..XPT
