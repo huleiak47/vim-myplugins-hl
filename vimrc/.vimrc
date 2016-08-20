@@ -41,6 +41,7 @@ Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Tagbar'
 Plugin 'VOom'
 Plugin 'xptemplate'
+Plugin 'ctrlpvim/ctrlp.vim'
 endif
 
 if g:isWin
@@ -265,7 +266,7 @@ if g:isGUI && !exists("s:has_inited")
     set lines=40 columns=120
 endif
 
-set textwidth=0
+set textwidth=80
 set hidden
 set fdl=99
 set numberwidth=5
@@ -314,7 +315,6 @@ let g:ycm_key_list_previous_completion = ['<Up>']
 
 set vb t_vb=
 autocmd GUIEnter * set vb t_vb=
-set textwidth=80
 set suffixes=.bak,~,.o,.info,.swp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv
 "排版设置
 autocmd FileType * setl formatoptions=roqnlmM1
@@ -424,7 +424,7 @@ endif
 "tagbar setting
 let g:tagbar_ctags_bin = 'ctags'
 let g:tagbar_left = 1
-let g:tagbar_width = 55
+let g:tagbar_width = 45
 let g:tagbar_expand = 0
 if g:isWin
     let g:tagbar_systemenc = 'cp936'
@@ -435,7 +435,7 @@ let g:tagbar_sort = 0
 
 
 "Voom
-let g:voom_tree_width = 55
+let g:voom_tree_width = 45
 let g:voom_tree_placement = "left"
 let g:voom_ft_modes = {'tex': 'latex', 'python': 'python', 'html' : 'html', 'xml' : 'html', 'pandoc' : 'pandoc', 'markdown' : 'markdown', 'org' : 'org'}
 
