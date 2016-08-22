@@ -1,4 +1,4 @@
-
+set nocompatible
 filetype off
 
 let g:isWin=(has("win32") || has("win64") || has("win32unix"))
@@ -35,12 +35,12 @@ Plugin 'Raimondi/delimitMate'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'mattn/emmet-vim'
+Plugin 'xptemplate'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Tagbar'
 Plugin 'VOom'
-Plugin 'xptemplate'
 Plugin 'ctrlpvim/ctrlp.vim'
 endif
 
@@ -221,7 +221,7 @@ if g:isWin
         set guifont=Consolas:h11
         set guifontwide=NSimSun:h11
         set linespace=0
-        set nocursorline "高亮当前行
+        set cursorline "高亮当前行
         source $VIMRUNTIME/delmenu.vim
         source $VIMRUNTIME/menu.vim
         "language messages zh_CN.utf-8
@@ -230,7 +230,7 @@ if g:isWin
         language messages en_US.utf-8
         set encoding=gbk
         colorscheme neon
-        set nocursorline
+        set cursorline
     endif
     set termencoding=gbk
 else
@@ -299,7 +299,7 @@ autocmd FileType c,cpp,python nnoremap <buffer> ,gf :YcmCompleter GoToDefinition
 autocmd FileType c,cpp,python nnoremap <buffer> ,gc :YcmCompleter GoToDeclaration<CR>
 autocmd FileType c,cpp,python nnoremap <buffer> ,gt :YcmCompleter GoTo<CR>
 autocmd FileType python nnoremap <buffer> <C-]> :YcmCompleter GoTo<CR>
-autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yc :YcmCompleter 
+autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yc :YcmCompleter
 let g:ycm_add_preview_to_completeopt=1
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
@@ -424,8 +424,9 @@ endif
 "tagbar setting
 let g:tagbar_ctags_bin = 'ctags'
 let g:tagbar_left = 1
-let g:tagbar_width = 45
+let g:tagbar_width = 40
 let g:tagbar_expand = 0
+let g:tagbar_show_linenumbers = -1
 if g:isWin
     let g:tagbar_systemenc = 'cp936'
 else
@@ -435,7 +436,7 @@ let g:tagbar_sort = 0
 
 
 "Voom
-let g:voom_tree_width = 45
+let g:voom_tree_width = 40
 let g:voom_tree_placement = "left"
 let g:voom_ft_modes = {'tex': 'latex', 'python': 'python', 'html' : 'html', 'xml' : 'html', 'pandoc' : 'pandoc', 'markdown' : 'markdown', 'org' : 'org'}
 
@@ -797,7 +798,7 @@ function! MaxWinAndSplit()
 endfunction
 
 function! RestoreWinAndSplit()
-    set lines=45 columns=130
+    set lines=40 columns=120
 endfunction
 
 function! OnDiffMode()
