@@ -36,6 +36,7 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'mattn/emmet-vim'
 Plugin 'xptemplate'
+Plugin 'skywind3000/asyncrun.vim'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
@@ -145,16 +146,6 @@ def FormatCode(tp):
             vim.command('%!astyle_c')
         else:
             vim.command("'<,'>!astyle_c")
-    elif ft in ('xml',):
-        if tp == 0:
-            vim.command("%!xmlformat")
-        else:
-            vim.command("'<,'>!xmlformat")
-    elif ft in ('html',):
-        if tp == 0:
-            vim.command("%!htmlformat")
-        else:
-            vim.command("'<,'>!htmlformat")
     elif ft in ('python',):
         tenc = vim.eval('&termencoding')
         enc = vim.eval('&encoding')
@@ -169,8 +160,11 @@ def FormatCode(tp):
         if tenc != enc:
             cmds.append(" | recoding %s" % enc)
         vim.command("".join(cmds))
-
     else:
+        if tp == 0:
+            vim.command("normal gg=G")
+        else:
+            vim.command("normal =")
         print >> sys.stderr, "Format code: file type not supported!"
     vim.command('normal `x')
     vim.command('normal zt')
@@ -523,37 +517,41 @@ function! QuickFixWindowToggle()
 endfunction
 nnoremap <silent> <F3> :call QuickFixWindowToggle()<CR>
 
-nnoremap <silent> <F7> :silent make<CR>
-nnoremap <silent> ,mk :silent make<CR>
-
+nnoremap <silent> <F7> :VPMakeProject<CR>
 nnoremap <silent> <C-F7> :MakeThisFile<CR>
-function! MakeInput()
-    let ret = input("Input make arguments: ")
-    exe 'silent make ' . ret
+
+function! MakeProjectArgs()
+    let pattern = input('VPMakeProject ')
+    if pattern != ''
+        if &encoding != &termencoding
+            let pattern = iconv(pattern, &encoding, &termencoding)
+        endif
+        exe 'VPMakeProject ' . pattern
+    endif
 endfunction
-nnoremap <silent> <S-F7> :call MakeInput()<CR>
+nnoremap <silent> <S-F7> :call MakeProjectArgs()<CR>
 
-nnoremap <silent> <F6> :UpdateTags<CR>
+nnoremap <silent> <F6> :VPUpdateTags<CR>
 
-nnoremap <silent> <F5> :Run<CR>
+nnoremap <silent> <F5> :VPRunExecution<CR>
 nnoremap <silent> <C-F5> :e %<CR>
 nnoremap <silent> <S-F5> :redraw!<CR>
 
-nnoremap <silent> <F12> :SearchProject<CR>
-nnoremap <silent> <C-F12> :EditProject<CR>
-nnoremap <silent> <S-F12> :SelectHistProject<CR>
-nnoremap <silent> <M-F12> :LoadSessionFile<CR>
-nnoremap <silent> <F11>   :InvertWarning<CR>
-nnoremap <silent> <C-F11> :LoadMakeResult<CR>
-nnoremap <silent> <S-F11> :LoadGrepResult<CR>
-nnoremap <silent> <M-F11> :EditFileListFile<CR>
+nnoremap <silent> <F12> :VPSearchProject<CR>
+nnoremap <silent> <C-F12> :VPEditProject<CR>
+nnoremap <silent> <S-F12> :VPSelectHistProject<CR>
+nnoremap <silent> <M-F12> :VPLoadSessionFile<CR>
+nnoremap <silent> <F11>   :VPInvertWarning<CR>
+nnoremap <silent> <C-F11> :VPLoadMakeResult<CR>
+nnoremap <silent> <S-F11> :VPLoadGrepResult<CR>
+nnoremap <silent> <M-F11> :VPEditFileListFile<CR>
+nnoremap <silent> ,T :VPStartTerminal<CR>
 
 if g:isWin
     noremap <silent> ,t :python import subprocess as sb; sb.Popen("start Console.exe", shell=1)<CR>
 else
     noremap <silent> ,t :python import subprocess as sb; sb.Popen("gnome-terminal")<CR>
 endif
-nnoremap <silent> ,T :StartTerminal<CR>
 
 noremap <silent> ,r :e $vimrc<CR>
 noremap <silent> ,R :so $vimrc<CR>
@@ -670,15 +668,13 @@ nnoremap <silent> <leader>rp :call MyReplaceInput()<CR>
 nnoremap <silent> ,ct :%s/\<<C-R>=expand("<cword>")<CR>\>//n<CR>
 
 function! GetVisual() range
-    let reg_save = getreg('"')
-    let regtype_save = getregtype('"')
-    let cb_save = &clipboard
-    set clipboard&
-    normal! ""gvy
-    let selection = getreg('"')
-    call setreg('"', reg_save, regtype_save)
-    let &clipboard = cb_save
-    return selection
+    " Why is this not a built-in Vim script function?!
+    let [lnum1, col1] = getpos("'<")[1:2]
+    let [lnum2, col2] = getpos("'>")[1:2]
+    let lines = getline(lnum1, lnum2)
+    let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 0 : 1)]
+    let lines[0] = lines[0][col1 - 1:]
+    return join(lines, "\n")
 endfunction
 
 function! MyReplaceSelection()
@@ -866,95 +862,12 @@ function! ClearSpaceAtEOL()
 endfunction
 nnoremap <silent> <leader>rs :call ClearSpaceAtEOL()<CR>
 
-"greps
-function! GrepThisWord()
-    let word = expand('<cword>')
-    if word != ''
-        if &encoding != &termencoding
-            let word = iconv(word, &encoding, &termencoding)
-        endif
-        exe 'silent grep \b' . expand('<cword>') . '\b'
-    endif
-endfunction
-
-function! GrepPattern()
-    let pattern = input('grep: ')
-    if pattern != ''
-        if &encoding != &termencoding
-            let pattern = iconv(pattern, &encoding, &termencoding)
-        endif
-        exe 'silent grep ' . pattern
-    endif
-endfunction
-nnoremap <silent> ,gw :call GrepThisWord()<CR>
-nnoremap <silent> ,gp :call GrepPattern()<CR>
-python << PYEOF
-def to_re_pattern(s):
-    ss = []
-    for c in s:
-        if c in r"\[]{}().*?+":
-            ss.append("\\")
-            ss.append(c)
-        elif c == "\n":
-            ss.append('\\n')
-        else:
-            ss.append(c)
-    return ''.join(ss)
-
-def grep_selection():
-    selection = vim.eval("GetVisual()")
-    if not selection:
-        return
-    if vim.eval('&encoding') != vim.eval('&termencoding'):
-        selection = selection.decode(vim.eval('&encoding')).encode(vim.eval('&termencoding'), 'replace')
-    vim.command('silent grep %s' % to_re_pattern(selection))
-
-def replace_to(pattern):
-    ret = vim.eval('input("Input replacement: ")')
-    do = vim.eval('''input('Do you want to replace "%s" to "%s"?(y/n)')''' % (pattern, ret))
-    if do and do.lower() in ['y', 'yes']:
-        replace_pattern(pattern, ret)
-
-def replace_input():
-    pattern = vim.eval('input("Input pattern: ")')
-    if not pattern:
-        return
-    replace_to(pattern)
-
-def replace_this_word():
-    word = vim.eval('expand("<cword>")')
-    if not word:
-        return
-    replace_to("".join(["\\b", word, "\\b"]))
-
-def replace_selection():
-    sel = vim.eval('GetVisual()')
-    replace_to(to_re_pattern(sel))
-
-def find_related_file():
-    ext = vim.eval('expand("%:e")')
-    if not ext:
-        return
-    if ext.lower() in ['c', 'cpp', 'cxx', 'cc']:
-        exts = ['h', 'hpp', 'hxx', 'hh']
-    elif ext.lower() in ['h', 'hpp', 'hxx', 'hh']:
-        exts = ['c', 'cpp', 'cxx', 'cc']
-    else:
-        return
-    for ext in exts:
-        fname = vim.eval('expand("%:r")') + '.' + ext
-        ret = vim.eval('findfile("%s")' % fname)
-        if ret:
-            vim.command('silent edit %s' % ret)
-            break
-
-PYEOF
-vnoremap <silent> ,gp :python grep_selection()<CR>
-nnoremap <silent> <leader>Rw :python replace_this_word()<CR>
-nnoremap <silent> <leader>Rp :python replace_input()<CR>
-vnoremap <silent> <leader>Rp :python replace_selection()<CR>
-
-nnoremap <silent> ,I :python find_related_file()<CR>
+nnoremap <silent> ,gw :VPGrepThisWord<CR>
+nnoremap <silent> ,gp :VPGrepInput<CR>
+vnoremap <silent> ,gp :<C-U>VPGrepSelection<CR>
+nnoremap <silent> <leader>Rw :VPReplaceThisWord<CR>
+nnoremap <silent> <leader>Rp :VPReplaceInput<CR>
+vnoremap <silent> <leader>Rp :VPReplaceSelection<CR>
 
 "自动提示
 let g:acp_enableAtStartup = 0
@@ -1080,4 +993,5 @@ autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
 
 " ctrlP
 let g:ctrlp_map = ',cp'
+let g:ctrlp_by_filename = 1
 

@@ -34,6 +34,20 @@ XPT funicode
 from __future__ import unicode_literals
 `cursor^
 
+XPT fprint
+from __future__ import print_function
+`cursor^
+
+XPT fdivision
+from __future__ import division
+`cursor^
+
+XPT future
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+`cursor^
+
 XPT try
 try:
     `job^
