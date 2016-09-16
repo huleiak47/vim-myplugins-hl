@@ -305,6 +305,7 @@ let g:ycm_error_symbol = 'E>'
 let g:ycm_warning_symbol = 'W>'
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
+let g:EclimCompletionMethod = 'omnifunc'
 
 
 set vb t_vb=
@@ -884,7 +885,6 @@ autocmd FileType javascript setl omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html setl omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setl omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml setl omnifunc=xmlcomplete#CompleteTags
-autocmd FileType java setl omnifunc=javacomplete#Complete
 
 
 nnoremap <silent> <C-N> :silent cn<CR>
@@ -930,7 +930,6 @@ let g:Align_xstrlen=3
 let loaded_snips=1
 
 "xptemplate
-let g:xptemplate_key = "<Tab>"
 let g:xptemplate_brace_complete = 0
 let g:xptemplate_highlight = 'following,next'
 "in python file do not map ' and "
