@@ -310,7 +310,6 @@ let g:EclimCompletionMethod = 'omnifunc'
 
 set vb t_vb=
 autocmd GUIEnter * set vb t_vb=
-set suffixes=.bak,~,.o,.info,.swp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv
 "排版设置
 autocmd FileType * setl formatoptions=roqnlmM1
 set formatoptions=roqnlmM1
@@ -990,7 +989,8 @@ autocmd FileType autohotkey setl omnifunc=ahkcomplete#Complete
 " pandoc
 autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
 
+set suffixes=.bak,~,.o,.info,.swp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv,.lib,.a,.suo,.sdf,.bin,.exe,.dll,.sbr,.cap,.dblite,.zip,.rar,.7z,.tar,.gz,.jar
 " ctrlP
 let g:ctrlp_map = ',cp'
 let g:ctrlp_by_filename = 1
-
+let g:ctrlp_custom_ignore = {'file': '\V\(' . join(split(&suffixes， ','), '\|') . '\)\$'}
