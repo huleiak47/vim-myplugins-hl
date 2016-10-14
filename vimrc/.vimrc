@@ -993,4 +993,4 @@ set suffixes=.bak,~,.o,.info,.swp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90
 " ctrlP
 let g:ctrlp_map = ',cp'
 let g:ctrlp_by_filename = 1
-let g:ctrlp_custom_ignore = {'file': '\V\(' . join(split(&suffixes， ','), '\|') . '\)\$'}
+let g:ctrlp_custom_ignore = {'file': '\V\(' . join(split(&suffixes, ','), '\|') . '\)\$'}
