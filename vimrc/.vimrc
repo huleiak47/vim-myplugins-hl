@@ -36,7 +36,6 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'mattn/emmet-vim'
 Plugin 'xptemplate'
-Plugin 'skywind3000/asyncrun.vim'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
@@ -201,11 +200,12 @@ nnoremap <silent> <C-PageDown> :python change_guifont_size(False)<CR>
 "==================================================================
 "通用的配置
 autocmd FileType dosbatch setl fileformat=dos | setl fenc=gbk
+autocmd FileType gitcommit setl fenc=utf-8
 if g:isWin
     "set shellslash
-    set fencs=ucs-bom,utf-8,gbk,big5,latin-1
+    set fencs=ucs-bom,ascii,utf-8,gbk,big5,latin-1
     if &fenc == "" && &modifiable
-        set fenc=utf-8
+        set fenc=ascii
     endif
     set fileformats=dos,unix
     if g:isGUI
@@ -215,7 +215,7 @@ if g:isWin
         set guifont=Consolas:h11
         set guifontwide=NSimSun:h11
         set linespace=0
-        set cursorline "高亮当前行
+        set nocursorline "高亮当前行
         source $VIMRUNTIME/delmenu.vim
         source $VIMRUNTIME/menu.vim
         "language messages zh_CN.utf-8
@@ -224,7 +224,7 @@ if g:isWin
         language messages en_US.utf-8
         set encoding=gbk
         colorscheme neon
-        set cursorline
+        set nocursorline
     endif
     set termencoding=gbk
 else
@@ -418,7 +418,7 @@ endif
 "tagbar setting
 let g:tagbar_ctags_bin = 'ctags'
 let g:tagbar_left = 1
-let g:tagbar_width = 40
+let g:tagbar_width = 50
 let g:tagbar_expand = 0
 let g:tagbar_show_linenumbers = -1
 if g:isWin
@@ -430,7 +430,7 @@ let g:tagbar_sort = 0
 
 
 "Voom
-let g:voom_tree_width = 40
+let g:voom_tree_width = 50
 let g:voom_tree_placement = "left"
 let g:voom_ft_modes = {'tex': 'latex', 'python': 'python', 'html' : 'html', 'xml' : 'html', 'pandoc' : 'pandoc', 'markdown' : 'markdown', 'org' : 'org'}
 
@@ -989,7 +989,7 @@ autocmd FileType autohotkey setl omnifunc=ahkcomplete#Complete
 " pandoc
 autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
 
-set suffixes=.bak,~,.o,.info,.swp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv,.lib,.a,.suo,.sdf,.bin,.exe,.dll,.sbr,.cap,.dblite,.zip,.rar,.7z,.tar,.gz,.jar
+set suffixes=.bak,~,.o,.info,.swp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv,.lib,.a,.suo,.sdf,.bin,.exe,.dll,.sbr,.cap,.dblite,.zip,.rar,.7z,.tar,.gz,.jar,.ilk,.exp
 " ctrlP
 let g:ctrlp_map = ',cp'
 let g:ctrlp_by_filename = 1
