@@ -80,6 +80,10 @@ PYTHONEOF
         Plugin 'huleiak47/vim-AHKcomplete'
     endif
 
+    if g:file_type_name == ".jvprj"
+        Plugin 'vim-eclim'
+    endif
+
 else
 
     if &diff == 0
@@ -212,7 +216,8 @@ if g:isWin
         set encoding=utf-8
         set ambiwidth=double
         "set guifont=droid_sans_mono:h11
-        set guifont=Consolas:h11
+        set guifont=Courier_New:h10
+        "set guifont=Consolas:h11
         set guifontwide=NSimSun:h11
         set linespace=0
         set nocursorline "高亮当前行
@@ -305,7 +310,11 @@ let g:ycm_error_symbol = 'E>'
 let g:ycm_warning_symbol = 'W>'
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
+
+"eclim plugin
 let g:EclimCompletionMethod = 'omnifunc'
+let g:EclimProjectRefreshFiles = 0
+let g:EclimXmlValidate = 0
 
 
 set vb t_vb=
@@ -518,7 +527,7 @@ endfunction
 nnoremap <silent> <F3> :call QuickFixWindowToggle()<CR>
 
 nnoremap <silent> <F7> :VPMakeProject<CR>
-nnoremap <silent> <C-F7> :MakeThisFile<CR>
+nnoremap <silent> <C-F7> :VPMakeThisFile<CR>
 
 function! MakeProjectArgs()
     let pattern = input('VPMakeProject ')

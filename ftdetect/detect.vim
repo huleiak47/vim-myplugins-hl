@@ -10,8 +10,6 @@ au BufRead,BufNewFile *.log             setf txt
 
 au BufRead,BufNewFile *.gcov            setf gcov
 
-au BufRead,BufNewFile *.vprj            setf vimproj
-
 au BufRead,BufNewFile *.ibs             setf vb
 
 au BufRead,BufNewFile *.scr             setf apdu
