@@ -36,6 +36,9 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'mattn/emmet-vim'
 Plugin 'xptemplate'
+Plugin 'vim-pandoc/vim-pandoc'
+Plugin 'vim-pandoc/vim-pandoc-syntax'
+Plugin 'huleiak47/vim-AHKcomplete'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
@@ -71,15 +74,6 @@ PYTHONEOF
         Plugin 'Valloric/YouCompleteMe'
     endif
 
-    if g:file_type_name == ".md" || g:file_type_name == ".markdown"
-        Plugin 'vim-pandoc/vim-pandoc'
-        Plugin 'vim-pandoc/vim-pandoc-syntax'
-    endif
-
-    if g:file_type_name == ".ahk"
-        Plugin 'huleiak47/vim-AHKcomplete'
-    endif
-
     if g:file_type_name == ".jvprj"
         Plugin 'vim-eclim'
     endif
@@ -88,11 +82,9 @@ else
 
     if &diff == 0
         Plugin 'Valloric/YouCompleteMe'
-        Plugin 'huleiak47/vim-AHKcomplete'
+        Plugin 'vim-eclim'
     endif
 
-    Plugin 'vim-pandoc/vim-pandoc'
-    Plugin 'vim-pandoc/vim-pandoc-syntax'
 
 endif
 
@@ -448,7 +440,7 @@ nnoremap <silent> ,O :VoomToggle<CR>
 
 "CScope
 if has("cscope")
-    set cscopequickfix=s-,d-,c-,i-,t-,e-,f-
+    set cscopequickfix=s-,d-,c-,i-,t-,e-,f-,g-
     set csto=1
     set cst
     set nocsverb
@@ -695,19 +687,34 @@ vnoremap <silent> <leader>rp :call MyReplaceSelection()<CR>
 
 "Cscope 的映射
 "set cscopetag
-nnoremap <silent> ,,s :silent cs find s <C-R>=expand("<cword>")<CR><CR>
-nnoremap <silent> ,,g :silent cs find g <C-R>=expand("<cword>")<CR><CR>
-nnoremap <silent> ,,c :silent cs find c <C-R>=expand("<cword>")<CR><CR>
-nnoremap <silent> ,,e :silent cs find e <C-R>=expand("<cword>")<CR><CR>
-nnoremap <silent> ,,d :silent cs find d <C-R>=expand("<cword>")<CR><CR>
-nnoremap <silent> ,,i :silent cs find i <C-R>=expand("%")<CR><CR>
-nnoremap <silent> ,,t :silent cs find t <C-R>=expand("<cword>")<CR><CR>
-nnoremap <silent> ,,f :silent cs find f <C-R>=expand("<cfile>")<CR><CR>
+function! CScopeFindWord(type)
+    if type == "i"
+        let word = expand("%")
+    else
+        let word = expand("<cword>")
+    endif
+    if word != ""
+        execute "copen 15"
+        wincmd p
+        execute "silent cs find " . atype . " " . word
+    endif
+endfunction
+
+nnoremap <silent> ,,s :call CScopeFindWord("s")<CR>
+nnoremap <silent> ,,g :call CScopeFindWord("g")<CR>
+nnoremap <silent> ,,c :call CScopeFindWord("c")<CR>
+nnoremap <silent> ,,e :call CScopeFindWord("e")<CR>
+nnoremap <silent> ,,d :call CScopeFindWord("d")<CR>
+nnoremap <silent> ,,i :call CScopeFindWord("i")<CR>
+nnoremap <silent> ,,t :call CScopeFindWord("t")<CR>
+nnoremap <silent> ,,f :call CScopeFindWord("f")<CR>
 
 function! CScopeFind(type)
     let cmd = "silent cs find " . a:type . " "
     let symbol = input(cmd . ":")
     if symbol != ""
+        execute "copen 15"
+        wincmd p
         execute cmd . symbol
     endif
 endfunction
@@ -912,11 +919,6 @@ let g:tex_comment_nospell = 1
 let g:tex_conceal=""
 
 let NERDTreeShowLineNumbers=1
-
-"echo func settings
-let g:EchoFuncKeyNext='<M-.>'
-let g:EchoFuncKeyPrev='<M-,>'
-let g:EchoFuncAutoStartBalloonDeclaration=0
 
 "python syntax
 let g:python_highlight_all=1
