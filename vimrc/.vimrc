@@ -292,7 +292,7 @@ autocmd FileType c,cpp,python nnoremap <buffer> ,gt :YcmCompleter GoTo<CR>
 autocmd FileType python nnoremap <buffer> <C-]> :YcmCompleter GoTo<CR>
 autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yc :YcmCompleter
 let g:ycm_add_preview_to_completeopt=1
-let g:ycm_complete_in_comments = 1
+let g:ycm_complete_in_comments = 0
 let g:ycm_complete_in_strings = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_disable_for_files_larger_than_kb = 10000
@@ -302,6 +302,7 @@ let g:ycm_error_symbol = 'E>'
 let g:ycm_warning_symbol = 'W>'
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
+let g:ycm_collect_identifiers_from_tags_files = 1
 
 "eclim plugin
 let g:EclimCompletionMethod = 'omnifunc'
