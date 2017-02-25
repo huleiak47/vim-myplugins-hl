@@ -4,7 +4,7 @@ if has('g:svnfunction_loaded')
 endif
 let g:svnfunction_loaded = 1
 
-python << EOF_PYTHON
+python3 << EOF_PYTHON
 import os, sys, locale
 from subprocess import Popen
 
@@ -30,5 +30,5 @@ def svn_diff_this_file(args = []):
 
 EOF_PYTHON
 
-command! SvnDiff      python svn_diff_this_file()
-command! SvnDiffPrev  python svn_diff_this_file(['-rPREV:BASE'])
+command! SvnDiff      python3 svn_diff_this_file()
+command! SvnDiffPrev  python3 svn_diff_this_file(['-rPREV:BASE'])

@@ -39,6 +39,7 @@ Plugin 'xptemplate'
 Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
 Plugin 'huleiak47/vim-AHKcomplete'
+Plugin 'w0rp/ale'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
@@ -48,7 +49,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 endif
 
 if g:isWin
-python << PYTHONEOF
+python3 << PYTHONEOF
 
 import os
 import vim
@@ -59,18 +60,20 @@ def get_file_type_name():
     if not vim.eval("g:isWin"):
         return
     isdiff = vim.eval("&diff")
-    GetCommandLine = ctypes.windll.kernel32.GetCommandLineA
-    GetCommandLine.restype = ctypes.c_char_p
+    GetCommandLine = ctypes.windll.kernel32.GetCommandLineW
+    GetCommandLine.restype = ctypes.c_wchar_p
     cmdline = GetCommandLine()
     cmdline = cmdline.strip('"')
     ftype = os.path.splitext(cmdline)[1].lower()
+    if not ftype:
+        ftype = cmdline.split(" ")[-1].lower()
     vim.command("let g:file_type_name='%s'" % ftype)
 
 get_file_type_name()
 
 PYTHONEOF
 
-    if (g:file_type_name == ".py" || g:file_type_name == ".pyw" || g:file_type_name == ".vprj") && &diff == 0
+    if (g:file_type_name == ".py" || g:file_type_name == ".pyw" || g:file_type_name == ".vprj" || g:file_type_name == "sconstruct") && &diff == 0
         Plugin 'Valloric/YouCompleteMe'
     endif
 
@@ -120,12 +123,10 @@ filetype indent on
 
 "python接口
 
-python << EOF_PYTHON
+python3 << EOF_PYTHON
 
 import vim
 import sys
-reload(sys)
-sys.setdefaultencoding("utf-8")
 import os
 import re
 
@@ -160,7 +161,7 @@ def FormatCode(tp):
             vim.command("normal gg=G")
         else:
             vim.command("normal =")
-        print >> sys.stderr, "Format code: file type not supported!"
+        print("Format code: file type not supported!", file=sys.stderr)
     vim.command('normal `x')
     vim.command('normal zt')
     vim.command('call setpos(".", [0, %d, %d, 0])' % (line, col))
@@ -190,13 +191,13 @@ def change_guifont_size(inc = True):
 
 EOF_PYTHON
 
-nnoremap <silent> <C-PageUp> :python change_guifont_size(True)<CR>
-nnoremap <silent> <C-PageDown> :python change_guifont_size(False)<CR>
+nnoremap <silent> <C-PageUp> :python3 change_guifont_size(True)<CR>
+nnoremap <silent> <C-PageDown> :python3 change_guifont_size(False)<CR>
 
 "==================================================================
 "通用的配置
 autocmd FileType dosbatch setl fileformat=dos | setl fenc=gbk
-autocmd FileType gitcommit setl fenc=utf-8
+autocmd FileType gitcommit,python,tex setl fenc=utf-8
 if g:isWin
     "set shellslash
     set fencs=ucs-bom,ascii,utf-8,gbk,big5,latin-1
@@ -229,7 +230,7 @@ else
     "set guifontwide=WenQuanYi\ Zen\ Hei\ 12
     set guifontwide=文泉驿等宽微米黑\ 10
     set linespace=0
-    set fencs=ucs-bom,utf-8,gb18030,big5,latin-1,utf-16
+    set fencs=ascii,ucs-bom,utf-8,gb18030,big5,latin-1,utf-16
     if &fenc == "" && &modifiable
         set fenc=utf-8
     endif
@@ -241,15 +242,6 @@ else
     else
         colorscheme neon
     endif
-endif
-
-if g:isWin
-    function! ChangeEUCCNtoGBK()
-        if &fenc == "euc-cn" && &modifiable == 1
-            set fenc=gbk
-        endif
-    endfunction
-    au BufRead * call ChangeEUCCNtoGBK()
 endif
 
 if g:isGUI && !exists("s:has_inited")
@@ -291,6 +283,8 @@ autocmd FileType c,cpp,python nnoremap <buffer> ,gc :YcmCompleter GoToDeclaratio
 autocmd FileType c,cpp,python nnoremap <buffer> ,gt :YcmCompleter GoTo<CR>
 autocmd FileType python nnoremap <buffer> <C-]> :YcmCompleter GoTo<CR>
 autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yc :YcmCompleter
+autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yd :YcmDiags<CR>
+autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yf :YcmCompleter FixIt<CR>
 let g:ycm_add_preview_to_completeopt=1
 let g:ycm_complete_in_comments = 0
 let g:ycm_complete_in_strings = 1
@@ -303,6 +297,8 @@ let g:ycm_warning_symbol = 'W>'
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
 let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_python_binary_path = 'C:\\Python36-32\\python.exe'
+"let g:ycm_server_python_interpreter = 'C:\\Python36-32\\python.exe'
 
 "eclim plugin
 let g:EclimCompletionMethod = 'omnifunc'
@@ -550,9 +546,9 @@ nnoremap <silent> <M-F11> :VPEditFileListFile<CR>
 nnoremap <silent> ,T :VPStartTerminal<CR>
 
 if g:isWin
-    noremap <silent> ,t :python import subprocess as sb; sb.Popen("start Console.exe", shell=1)<CR>
+    noremap <silent> ,t :python3 import subprocess as sb; sb.Popen("start Console.exe", shell=1)<CR>
 else
-    noremap <silent> ,t :python import subprocess as sb; sb.Popen("gnome-terminal")<CR>
+    noremap <silent> ,t :python3 import subprocess as sb; sb.Popen("gnome-terminal")<CR>
 endif
 
 noremap <silent> ,r :e $vimrc<CR>
@@ -689,7 +685,7 @@ vnoremap <silent> <leader>rp :call MyReplaceSelection()<CR>
 "Cscope 的映射
 "set cscopetag
 function! CScopeFindWord(type)
-    if type == "i"
+    if a:type == "i"
         let word = expand("%")
     else
         let word = expand("<cword>")
@@ -697,7 +693,7 @@ function! CScopeFindWord(type)
     if word != ""
         execute "copen 15"
         wincmd p
-        execute "silent cs find " . atype . " " . word
+        execute "silent cs find " . a:type . " " . word
     endif
 endfunction
 
@@ -894,6 +890,7 @@ let g:acp_mappingDriven = 1
 let g:DoxygenToolkit_versionString = "1.0"
 let g:DoxygenToolkit_authorName = "Hulei"
 let g:DoxygenToolkit_licenseTag = "Copyright (C) " . strftime("%Y") . " Nationz Technologies Inc. All rights reserved."
+let g:DoxygenToolkit_maxFunctionProtoLines = 30
 
 
 autocmd FileType ruby,eruby setl omnifunc=rubycomplete#Complete
@@ -923,7 +920,7 @@ let NERDTreeShowLineNumbers=1
 
 "python syntax
 let g:python_highlight_all=1
-let g:python_version_2=1
+let g:python_version_2=0
 
 "delimitMate settings
 let delimitMate_matchpairs = "(:),[:],{:}"
@@ -950,7 +947,7 @@ let g:xptemplate_highlight = 'following,next'
 "airline
 let g:airline#extensions#tagbar#enabled = 0
 
-python << EOF
+python3 << EOF
 def save_colorscheme():
     if int(vim.eval("g:isGUI")):
         with open(vim.eval("$HOME") + "/.colorscheme", "wb") as f:
@@ -965,7 +962,7 @@ if int(vim.eval("g:isGUI")):
 
 EOF
 
-autocmd ColorScheme * python save_colorscheme()
+autocmd ColorScheme * python3 save_colorscheme()
 
 if !g:isGUI
     let g:indentLine_loaded = 1
@@ -1001,8 +998,19 @@ autocmd FileType autohotkey setl omnifunc=ahkcomplete#Complete
 " pandoc
 autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
 
-set suffixes=.bak,~,.o,.info,.swp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv,.lib,.a,.suo,.sdf,.bin,.exe,.dll,.sbr,.cap,.dblite,.zip,.rar,.7z,.tar,.gz,.jar,.ilk,.exp
+set suffixes=.bak,~,.o,.info,.swp,.tmp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv,.lib,.a,.suo,.sdf,.bin,.exe,.dll,.sbr,.cap,.dblite,.zip,.rar,.7z,.tar,.gz,.jar,.ilk,.exp
 " ctrlP
 let g:ctrlp_map = ',cp'
 let g:ctrlp_by_filename = 1
 let g:ctrlp_custom_ignore = {'file': '\V\(' . join(split(&suffixes, ','), '\|') . '\)\$'}
+
+" jts file
+au BufReadPost *.jts setf pascal
+au BufCreate *.jts setf pascal
+let g:pascal_delphi = 1
+
+" ale
+let g:ale_linters = {
+\   'python': ['pylint'],
+\   'vim': ['vint'],
+\}
