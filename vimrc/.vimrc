@@ -557,8 +557,8 @@ noremap <silent> ,R :so $vimrc<CR>
 noremap <silent> ,w :update<CR>
 noremap <silent> ,W :update!<CR>
 
-nnoremap <silent> <leader>f :py FormatCode(0)<CR>
-vnoremap <silent> <leader>f :py FormatCode(1)<CR>
+nnoremap <silent> <leader>f :python3 FormatCode(0)<CR>
+vnoremap <silent> <leader>f :python3 FormatCode(1)<CR>
 nnoremap <silent> <leader>j :Dox<CR>
 nnoremap <silent> <leader>l :DoxLic<CR>
 
