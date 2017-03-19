@@ -44,7 +44,6 @@ Plugin 'w0rp/ale'
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Tagbar'
-Plugin 'VOom'
 Plugin 'ctrlpvim/ctrlp.vim'
 endif
 
@@ -426,13 +425,7 @@ endif
 let g:tagbar_sort = 0
 
 
-"Voom
-let g:voom_tree_width = 50
-let g:voom_tree_placement = "left"
-let g:voom_ft_modes = {'tex': 'latex', 'python': 'python', 'html' : 'html', 'xml' : 'html', 'pandoc' : 'pandoc', 'markdown' : 'markdown', 'org' : 'org'}
-
 nnoremap <silent> ,o :TagbarToggle<CR>
-nnoremap <silent> ,O :VoomToggle<CR>
 
 "CScope
 if has("cscope")
