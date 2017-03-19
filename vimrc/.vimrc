@@ -161,7 +161,6 @@ def FormatCode(tp):
             vim.command("normal gg=G")
         else:
             vim.command("normal =")
-        print("Format code: file type not supported!", file=sys.stderr)
     vim.command('normal `x')
     vim.command('normal zt')
     vim.command('call setpos(".", [0, %d, %d, 0])' % (line, col))
@@ -666,14 +665,17 @@ nnoremap <silent> <leader>rp :call MyReplaceInput()<CR>
 nnoremap <silent> ,ct :%s/\<<C-R>=expand("<cword>")<CR>\>//n<CR>
 
 function! GetVisual() range
-    " Why is this not a built-in Vim script function?!
-    let [lnum1, col1] = getpos("'<")[1:2]
-    let [lnum2, col2] = getpos("'>")[1:2]
-    let lines = getline(lnum1, lnum2)
-    let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 0 : 1)]
-    let lines[0] = lines[0][col1 - 1:]
-    return join(lines, "\n")
+    let reg_save = getreg('"')
+    let regtype_save = getregtype('"')
+    let cb_save = &clipboard
+    set clipboard&
+    normal! ""gvy
+    let selection = getreg('"')
+    call setreg('"', reg_save, regtype_save)
+    let &clipboard = cb_save
+    return selection
 endfunction
+
 
 function! MyReplaceSelection()
     let word = GetVisual()
