@@ -945,7 +945,7 @@ let g:airline#extensions#tagbar#enabled = 0
 python3 << EOF
 def save_colorscheme():
     if int(vim.eval("g:isGUI")):
-        with open(vim.eval("$HOME") + "/.colorscheme", "wb") as f:
+        with open(vim.eval("$HOME") + "/.colorscheme", "w") as f:
             f.write("colorscheme " + vim.eval("g:colors_name") + "\n" + "set background=" + vim.eval("&background"))
 
 if int(vim.eval("g:isGUI")):
@@ -1009,3 +1009,14 @@ let g:ale_linters = {
 \   'python': ['pylint'],
 \   'vim': ['vint'],
 \}
+
+" 使用 ppppp 进行多行多次粘贴操作
+vnoremap <silent> y y`]
+vnoremap <silent> p p`]
+nnoremap <silent> p p`]
+
+" 通过 12<Enter> 跳转到第 12 行 （12G 我觉得不称手）
+" 按 <Enter> 跳到行文件末尾。
+" 按 <Backspace> 回到文件开始。
+nnoremap <CR> G
+nnoremap <BS> gg
