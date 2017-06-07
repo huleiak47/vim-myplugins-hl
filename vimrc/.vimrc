@@ -189,13 +189,14 @@ def change_guifont_size(inc = True):
 
 EOF_PYTHON
 
-nnoremap <silent> <C-PageUp> :python3 change_guifont_size(True)<CR>
-nnoremap <silent> <C-PageDown> :python3 change_guifont_size(False)<CR>
+nnoremap <silent> ,fti :python3 change_guifont_size(True)<CR>
+nnoremap <silent> ,fto :python3 change_guifont_size(False)<CR>
 
 "==================================================================
 "通用的配置
 autocmd FileType dosbatch setl fileformat=dos | setl fenc=gbk
-autocmd FileType gitcommit,python,tex setl fenc=utf-8
+autocmd FileType gitcommit,tex setl fenc=utf-8
+autocmd FileType python if &fenc == "ascii" | set fenc=utf-8 | endif
 if g:isWin
     "set shellslash
     set fencs=ucs-bom,ascii,utf-8,gbk,big5,latin-1
@@ -211,7 +212,7 @@ if g:isWin
         "set guifont=Consolas:h11
         set guifontwide=NSimSun:h11
         set linespace=0
-        set nocursorline "高亮当前行
+        set cursorline "高亮当前行
         source $VIMRUNTIME/delmenu.vim
         source $VIMRUNTIME/menu.vim
         "language messages zh_CN.utf-8
@@ -296,7 +297,7 @@ let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_python_binary_path = 'C:\\Python36-32\\python.exe'
-"let g:ycm_server_python_interpreter = 'C:\\Python36-32\\python.exe'
+let g:ycm_server_python_interpreter = 'C:\\Python36-32\\python.exe'
 
 "eclim plugin
 let g:EclimCompletionMethod = 'omnifunc'
@@ -327,8 +328,8 @@ function! FormatLineORSelection(sel)
     let &smartindent = si
 endfunction
 
-nnoremap <silent> <leader>F :call FormatLineORSelection(0)<CR>
-vnoremap <silent> <leader>F :<C-U>call FormatLineORSelection(1)<CR>
+nnoremap <silent> ,F :call FormatLineORSelection(0)<CR>
+vnoremap <silent> ,F :<C-U>call FormatLineORSelection(1)<CR>
 
 set complete=.,w,b,u,t
 
@@ -425,7 +426,7 @@ endif
 let g:tagbar_sort = 0
 
 
-nnoremap <silent> ,o :TagbarToggle<CR>
+nnoremap <silent> ,ot :TagbarToggle<CR>
 
 "CScope
 if has("cscope")
@@ -459,6 +460,7 @@ inoremap ï  <C-O>o
 inoremap <silent> <C-L> <DEL>
 inoremap <silent> <C-K> <C-W>
 
+"ALT-S 删除当前光标及之后的文本，并进入insert模式
 nnoremap ó DA
 "save file
 nnoremap <silent> <C-S> :update<CR>
@@ -466,18 +468,21 @@ inoremap <silent> <C-S> <C-O>:update<CR>
 vnoremap <silent> <C-S> <ESC>:update<CR>gv
 
 noremap <silent> <F4> :q<CR>
-noremap <silent> ,q :q<CR>
 noremap <silent> <C-F4> :qall!<CR>
 noremap <silent> <S-F4> :q!<CR>
 
-noremap <silent> ,nb :bNext<CR>
+nnoremap <silent> ,rl :e %<CR>
+nnoremap <silent> ,rd :redraw!<CR>
 
-noremap <silent> <leader>x :% !xxd -g 1<CR>
-noremap <silent> <leader>X :% !xxd -g 1 -r<CR>
+noremap <silent> ,bn :bnext<CR>
+noremap <silent> ,bp :bprevious<CR>
+
+noremap <silent> ,xx :% !xxd -g 1<CR>
+noremap <silent> ,xr :% !xxd -g 1 -r<CR>
 
 nnoremap <silent> ,/ :let @/=""<CR>
 
-nnoremap <silent> ,b :BufExplorer<CR>
+nnoremap <silent> ,bb :BufExplorer<CR>
 "打开NERDTree并且定位到当前文件
 function! CallNERDTree()
     let temp = @/
@@ -506,9 +511,12 @@ function! QuickFixWindowToggle()
     endif
 endfunction
 nnoremap <silent> <F3> :call QuickFixWindowToggle()<CR>
+nnoremap <silent> ,qf :call QuickFixWindowToggle()<CR>
 
 nnoremap <silent> <F7> :VPMakeProject<CR>
+nnoremap <silent> ,pmk :VPMakeProject<CR>
 nnoremap <silent> <C-F7> :VPMakeThisFile<CR>
+nnoremap <silent> ,pmf :VPMakeThisFile<CR>
 
 function! MakeProjectArgs()
     let pattern = input('VPMakeProject ')
@@ -520,39 +528,47 @@ function! MakeProjectArgs()
     endif
 endfunction
 nnoremap <silent> <S-F7> :call MakeProjectArgs()<CR>
+nnoremap <silent> ,pma :call MakeProjectArgs()<CR>
 
 nnoremap <silent> <F6> :VPUpdateTags<CR>
+nnoremap <silent> ,pup :VPUpdateTags<CR>
 
 nnoremap <silent> <F5> :VPRunExecution<CR>
-nnoremap <silent> <C-F5> :e %<CR>
-nnoremap <silent> <S-F5> :redraw!<CR>
+nnoremap <silent> ,pex :VPRunExecution<CR>
 
 nnoremap <silent> <F12> :VPSearchProject<CR>
+nnoremap <silent> ,psp :VPSearchProject<CR>
 nnoremap <silent> <C-F12> :VPEditProject<CR>
+nnoremap <silent> ,pep :VPEditProject<CR>
 nnoremap <silent> <S-F12> :VPSelectHistProject<CR>
+nnoremap <silent> ,php :VPSelectHistProject<CR>
 nnoremap <silent> <M-F12> :VPLoadSessionFile<CR>
+nnoremap <silent> ,pls :VPLoadSessionFile<CR>
 nnoremap <silent> <F11>   :VPInvertWarning<CR>
+nnoremap <silent> ,piw   :VPInvertWarning<CR>
 nnoremap <silent> <C-F11> :VPLoadMakeResult<CR>
+nnoremap <silent> ,plm :VPLoadMakeResult<CR>
 nnoremap <silent> <S-F11> :VPLoadGrepResult<CR>
+nnoremap <silent> ,plg :VPLoadGrepResult<CR>
 nnoremap <silent> <M-F11> :VPEditFileListFile<CR>
-nnoremap <silent> ,T :VPStartTerminal<CR>
+nnoremap <silent> ,pel :VPEditFileListFile<CR>
+nnoremap <silent> ,pt :VPStartTerminal<CR>
 
 if g:isWin
-    noremap <silent> ,t :python3 import subprocess as sb; sb.Popen("start Console.exe", shell=1)<CR>
+    noremap <silent> ,tt :python3 import subprocess as sb; sb.Popen("start Console.exe", shell=1)<CR>
 else
-    noremap <silent> ,t :python3 import subprocess as sb; sb.Popen("gnome-terminal")<CR>
+    noremap <silent> ,tt :python3 import subprocess as sb; sb.Popen("gnome-terminal")<CR>
 endif
 
-noremap <silent> ,r :e $vimrc<CR>
-noremap <silent> ,R :so $vimrc<CR>
+noremap <silent> ,rc :e $vimrc<CR>
+noremap <silent> ,rC :so $vimrc<CR>
 
 noremap <silent> ,w :update<CR>
-noremap <silent> ,W :update!<CR>
 
-nnoremap <silent> <leader>f :python3 FormatCode(0)<CR>
-vnoremap <silent> <leader>f :python3 FormatCode(1)<CR>
-nnoremap <silent> <leader>j :Dox<CR>
-nnoremap <silent> <leader>l :DoxLic<CR>
+nnoremap <silent> ,fm :python3 FormatCode(0)<CR>
+vnoremap <silent> ,fm :python3 FormatCode(1)<CR>
+nnoremap <silent> ,dx :Dox<CR>
+nnoremap <silent> ,doxl :DoxLic<CR>
 
 "bufdo and windo
 function! Bufdo(cmd)
@@ -588,7 +604,7 @@ endfunction
 
 "switch wrap mode
 if !exists("g:my_wrap_mode") | let g:my_wrap_mode = &wrap | endif
-nnoremap <silent> ,a :let &wrap=!&wrap<CR>
+nnoremap <silent> ,ap :let &wrap=!&wrap<CR>
 autocmd BufWinEnter * let &wrap=g:my_wrap_mode
 
 function! SwitchWrapMode()
@@ -598,12 +614,12 @@ function! SwitchWrapMode()
     endif
     call Windo("let &wrap=g:my_wrap_mode")
 endfunction
-nnoremap <silent> ,A :call SwitchWrapMode()<CR>
+nnoremap <silent> ,aa :call SwitchWrapMode()<CR>
 
 
 "switch list mode
 if !exists("g:my_list_mode") | let g:my_list_mode = &list | endif
-nnoremap <silent> ,s :let &list=!&list<CR>
+nnoremap <silent> ,ss :let &list=!&list<CR>
 autocmd BufWinEnter * let &list=g:my_list_mode
 
 function! SwitchListMode()
@@ -613,7 +629,7 @@ function! SwitchListMode()
     endif
     call Windo("let &list=g:my_list_mode")
 endfunction
-nnoremap <silent> ,S :call SwitchListMode()<CR>
+nnoremap <silent> ,sa :call SwitchListMode()<CR>
 
 
 "查找选中文本
@@ -643,7 +659,7 @@ function! MyReplaceCurrentWord()
     call MyReplace("\\V\\C\\<" . word . "\\>")
 endfunction
 "替换光标下的单词
-nnoremap <silent> <leader>rw :call MyReplaceCurrentWord()<CR>
+nnoremap <silent> ,rw :call MyReplaceCurrentWord()<CR>
 
 function! MyReplaceInput()
     let s = input("Input partten: ")
@@ -652,7 +668,7 @@ function! MyReplaceInput()
     endif
 endfunction
 
-nnoremap <silent> <leader>rp :call MyReplaceInput()<CR>
+nnoremap <silent> ,rp :call MyReplaceInput()<CR>
 
 "find count of the word under the cursor
 nnoremap <silent> ,ct :%s/\<<C-R>=expand("<cword>")<CR>\>//n<CR>
@@ -675,7 +691,7 @@ function! MyReplaceSelection()
     call MyReplace("\\V\\C" . substitute(word, "\\\\", "\\\\\\\\", "g"))
 endfunction
 "替换选中的文本
-vnoremap <silent> <leader>rp :call MyReplaceSelection()<CR>
+vnoremap <silent> ,rp :call MyReplaceSelection()<CR>
 
 "Cscope 的映射
 "set cscopetag
@@ -741,21 +757,19 @@ xnoremap <silent> <C-DOWN>  :m'>+<cr>gv=gv
 
 
 "补全
-inoremap <silent> <M-/> <C-X><C-U>
+inoremap <silent> <M-/> <C-X><C-O>
 inoremap <silent> <C-SPACE> <C-X><C-O>
 "autocmd FileType python inoremap <buffer> . .<C-X><C-O>
 
 "复制，选择，剪切和粘贴
-nnoremap <silent> <leader>y "+y
-nnoremap <silent> <leader>p "+p
-nnoremap <silent> <leader>Y "+Y
-nnoremap <silent> <leader>P "+P
-vnoremap <silent> <leader>y "+y
-vnoremap <silent> <leader>p "+p
-vnoremap <silent> <leader>Y "+Y
-vnoremap <silent> <leader>P "+P
-vnoremap <silent> <C-C> "+y
-vnoremap <silent> <C-X> "+d
+nnoremap <silent> ,yy "+Y`]
+nnoremap <silent> ,pp "+p`]
+nnoremap <silent> ,PP "+P`]
+vnoremap <silent> ,yy "+y`]
+vnoremap <silent> ,pp "+p`]
+vnoremap <silent> ,PP "+P`]
+vnoremap <silent> <C-C> "+y`]
+vnoremap <silent> <C-X> "+d`]
 
 noremap <silent> <C-A> <ESC>gg<S-V>G
 
@@ -787,13 +801,13 @@ vnoremap <silent> <F1> :call HelpSelection()<CR>
 
 "CTRL-F1,F2,F3分别复制文件目录，文件名，文件路径
 if g:isWin
-    nnoremap <silent> <C-F1> :let @+ = substitute(expand("%:p:h"), "/", "\\", "g")<CR>
-    nnoremap <silent> <C-F2> :let @+ = substitute(expand("%:p:t"), "/", "\\", "g")<CR>
-    nnoremap <silent> <C-F3> :let @+ = substitute(expand("%:p"), "/", "\\", "g")<CR>
+    nnoremap <silent> ,yd :let @+ = substitute(expand("%:p:h"), "/", "\\", "g")<CR>
+    nnoremap <silent> ,yn :let @+ = substitute(expand("%:p:t"), "/", "\\", "g")<CR>
+    nnoremap <silent> ,yp :let @+ = substitute(expand("%:p"), "/", "\\", "g")<CR>
 else
-    nnoremap <silent> <C-F1> :let @+ = expand("%:p:h")<CR>
-    nnoremap <silent> <C-F2> :let @+ = expand("%:p:t")<CR>
-    nnoremap <silent> <C-F3> :let @+ = expand("%:p")<CR>
+    nnoremap <silent> ,yd :let @+ = expand("%:p:h")<CR>
+    nnoremap <silent> ,yn :let @+ = expand("%:p:t")<CR>
+    nnoremap <silent> ,yp :let @+ = expand("%:p")<CR>
 endif
 
 function! MaxWinAndSplit()
@@ -826,8 +840,8 @@ if &diff
 endif
 autocmd VIMEnter * call OnInit()
 autocmd FilterWritePost * if &diff | call OnDiffMode() | endif
-nnoremap <silent> ,,wm :call MaxWinAndSplit()<CR>
-nnoremap <silent> ,,wn :call RestoreWinAndSplit()<CR>
+nnoremap <silent> ,wm :call MaxWinAndSplit()<CR>
+nnoremap <silent> ,wn :call RestoreWinAndSplit()<CR>
 
 "Diff
 function! DiffFiles()
@@ -836,7 +850,7 @@ function! DiffFiles()
         call Windo('if &buftype == "" | let g:my_diff_win_count += 1 | endif')
         if g:my_diff_win_count <= 1
             exe "diffthis"
-            exe "vert sbNext"
+            exe "vert sbnext"
             exe "diffthis"
         else
             call Windo('if &buftype == "" | diffthis | endif')
@@ -848,9 +862,6 @@ function! DiffFiles()
 endfunction
 nnoremap <silent> ,df :call DiffFiles()<CR>
 nnoremap <silent> ,dg :TagbarClose<CR>:Gdiff<CR>
-
-nnoremap <silent> ,dv :SvnDiff<CR>
-nnoremap <silent> ,dr :SvnDiffPrev<CR>
 nnoremap <silent> ,du :diffupdate<CR>
 
 function! DiffSwitchIwhite()
@@ -868,14 +879,14 @@ function! ClearSpaceAtEOL()
     execute "silent! %s/\\v(\\s|\\r)+$//g"
     normal `x
 endfunction
-nnoremap <silent> <leader>rs :call ClearSpaceAtEOL()<CR>
+nnoremap <silent> ,rs :call ClearSpaceAtEOL()<CR>
 
-nnoremap <silent> ,gw :VPGrepThisWord<CR>
-nnoremap <silent> ,gp :VPGrepInput<CR>
-vnoremap <silent> ,gp :<C-U>VPGrepSelection<CR>
-nnoremap <silent> <leader>Rw :VPReplaceThisWord<CR>
-nnoremap <silent> <leader>Rp :VPReplaceInput<CR>
-vnoremap <silent> <leader>Rp :VPReplaceSelection<CR>
+nnoremap <silent> ,pgw :VPGrepThisWord<CR>
+nnoremap <silent> ,pgp :VPGrepInput<CR>
+vnoremap <silent> ,pgp :<C-U>VPGrepSelection<CR>
+nnoremap <silent> ,prw :VPReplaceThisWord<CR>
+nnoremap <silent> ,prp :VPReplaceInput<CR>
+vnoremap <silent> ,prp :VPReplaceSelection<CR>
 
 "自动提示
 let g:acp_enableAtStartup = 0
@@ -981,7 +992,7 @@ nmap <silent> ,mc <Plug>MarkClear
 nmap <silent> ,mn <Plug>MarkClear
 
 " related file
-nnoremap <silent> ,i  :OpenRelatedFile<CR>
+nnoremap <silent> ,fi  :OpenRelatedFile<CR>
 let g:relatedfile_user_dict = {".md" : [".html"], ".html" : [".md"]}
 
 " map relativenumber switch
@@ -995,7 +1006,7 @@ autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
 
 set suffixes=.bak,~,.o,.info,.swp,.tmp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv,.lib,.a,.suo,.sdf,.bin,.exe,.dll,.sbr,.cap,.dblite,.zip,.rar,.7z,.tar,.gz,.jar,.ilk,.exp
 " ctrlP
-let g:ctrlp_map = ',cp'
+let g:ctrlp_map = ',ff'
 let g:ctrlp_by_filename = 1
 let g:ctrlp_custom_ignore = {'file': '\V\(' . join(split(&suffixes, ','), '\|') . '\)\$'}
 
@@ -1007,7 +1018,9 @@ let g:pascal_delphi = 1
 " ale
 let g:ale_linters = {
 \   'python': ['pylint'],
-\   'vim': ['vint'],
+\   'vim': [],
+\   'c': [],
+\   'cpp': [],
 \}
 
 " 使用 ppppp 进行多行多次粘贴操作
@@ -1015,8 +1028,25 @@ vnoremap <silent> y y`]
 vnoremap <silent> p p`]
 nnoremap <silent> p p`]
 
-" 通过 12<Enter> 跳转到第 12 行 （12G 我觉得不称手）
-" 按 <Enter> 跳到行文件末尾。
+" 通过 12<Space> 跳转到第 12 行
+" 按 <Space> 跳到行文件末尾。
 " 按 <Backspace> 回到文件开始。
-nnoremap <CR> G
+nnoremap <Space> G
 nnoremap <BS> gg
+
+
+" latex for tagbar
+let g:tagbar_type_tex = {
+    \ 'ctagstype' : 'latex',
+    \ 'kinds'     : [
+        \ 's:sections',
+        \ 'g:graphics:0:0',
+        \ 'l:labels',
+        \ 'r:refs:1:0',
+        \ 'p:pagerefs:1:0'
+    \ ],
+    \ 'sort'    : 0,
+\ }
+
+" comment
+vmap / <leader>ci
