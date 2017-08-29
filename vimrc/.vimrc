@@ -116,6 +116,7 @@ endfunction
 set diffexpr=MyDiff()
 
 syntax on
+syntax sync fromstart
 filetype on
 filetype plugin on
 filetype indent on
@@ -151,7 +152,7 @@ def FormatCode(tp):
             cmds.append("'<,'>!")
         if tenc != enc:
             cmds.append("recoding %s | " % tenc)
-        cmds.append("autopep8 -a -")
+        cmds.append("yapf")
         if tenc != enc:
             cmds.append(" | recoding %s" % enc)
         vim.command("".join(cmds))
@@ -415,7 +416,7 @@ endif
 "tagbar setting
 let g:tagbar_ctags_bin = 'ctags'
 let g:tagbar_left = 1
-let g:tagbar_width = 50
+let g:tagbar_width = 40
 let g:tagbar_expand = 0
 let g:tagbar_show_linenumbers = -1
 if g:isWin
@@ -759,7 +760,7 @@ xnoremap <silent> <C-DOWN>  :m'>+<cr>gv=gv
 "补全
 inoremap <silent> <M-/> <C-X><C-O>
 inoremap <silent> <C-SPACE> <C-X><C-O>
-"autocmd FileType python inoremap <buffer> . .<C-X><C-O>
+inoremap <silent> <C-F> <C-X><C-F>
 
 "复制，选择，剪切和粘贴
 nnoremap <silent> ,yy "+Y`]
@@ -840,8 +841,8 @@ if &diff
 endif
 autocmd VIMEnter * call OnInit()
 autocmd FilterWritePost * if &diff | call OnDiffMode() | endif
-nnoremap <silent> ,wm :call MaxWinAndSplit()<CR>
-nnoremap <silent> ,wn :call RestoreWinAndSplit()<CR>
+nnoremap <silent> ,,wm :call MaxWinAndSplit()<CR>
+nnoremap <silent> ,,wn :call RestoreWinAndSplit()<CR>
 
 "Diff
 function! DiffFiles()
@@ -1009,6 +1010,9 @@ set suffixes=.bak,~,.o,.info,.swp,.tmp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90
 let g:ctrlp_map = ',ff'
 let g:ctrlp_by_filename = 1
 let g:ctrlp_custom_ignore = {'file': '\V\(' . join(split(&suffixes, ','), '\|') . '\)\$'}
+let g:ctrlp_root_markers = ['.project']
+let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 
 " jts file
 au BufReadPost *.jts setf pascal
@@ -1021,6 +1025,7 @@ let g:ale_linters = {
 \   'vim': [],
 \   'c': [],
 \   'cpp': [],
+\   'java': [],
 \}
 
 " 使用 ppppp 进行多行多次粘贴操作
