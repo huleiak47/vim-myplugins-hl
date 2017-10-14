@@ -13,4 +13,5 @@ au BufRead,BufNewFile *.gcov            setf gcov
 au BufRead,BufNewFile *.ibs             setf vb
 
 au BufRead,BufNewFile *.scr             setf apdu
+au BufRead,BufNewFile *.apdu            setf apdu
 augroup END

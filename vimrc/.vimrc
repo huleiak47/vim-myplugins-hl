@@ -40,6 +40,7 @@ Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
 Plugin 'huleiak47/vim-AHKcomplete'
 Plugin 'w0rp/ale'
+Plugin 'joshdick/onedark.vim'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
@@ -77,6 +78,7 @@ PYTHONEOF
     endif
 
     if g:file_type_name == ".jvprj"
+        Plugin 'Valloric/YouCompleteMe'
         Plugin 'vim-eclim'
     endif
 
@@ -116,7 +118,10 @@ endfunction
 set diffexpr=MyDiff()
 
 syntax on
-syntax sync fromstart
+
+" Refresh syntax hightlight when file open or written
+autocmd BufReadPost,BufWritePost * syntax sync fromstart
+
 filetype on
 filetype plugin on
 filetype indent on
@@ -281,6 +286,7 @@ set completeopt=menuone,longest,preview
 autocmd FileType c,cpp,python nnoremap <buffer> ,gf :YcmCompleter GoToDefinition<CR>
 autocmd FileType c,cpp,python nnoremap <buffer> ,gc :YcmCompleter GoToDeclaration<CR>
 autocmd FileType c,cpp,python nnoremap <buffer> ,gt :YcmCompleter GoTo<CR>
+autocmd FileType java nnoremap <buffer> ,gt :JavaSearchContext<CR>
 autocmd FileType python nnoremap <buffer> <C-]> :YcmCompleter GoTo<CR>
 autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yc :YcmCompleter
 autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yd :YcmDiags<CR>
@@ -428,6 +434,7 @@ let g:tagbar_sort = 0
 
 
 nnoremap <silent> ,ot :TagbarToggle<CR>
+nnoremap <silent> <F2> :TagbarToggle<CR>
 
 "CScope
 if has("cscope")
@@ -484,6 +491,8 @@ noremap <silent> ,xr :% !xxd -g 1 -r<CR>
 nnoremap <silent> ,/ :let @/=""<CR>
 
 nnoremap <silent> ,bb :BufExplorer<CR>
+nnoremap <silent> B :BufExplorer<CR>
+
 "打开NERDTree并且定位到当前文件
 function! CallNERDTree()
     let temp = @/
@@ -953,6 +962,29 @@ let g:xptemplate_highlight = 'following,next'
 
 "airline
 let g:airline#extensions#tagbar#enabled = 0
+let g:airline_theme = 'onedark'
+let g:airline#extensions#ycm#enabled = 1
+let g:airline#extensions#ycm#error_symbol = 'E:'
+let g:airline#extensions#ycm#warning_symbol = 'W:'
+let g:airline#extensions#eclim#enabled = 1
+
+if !exists('g:airline_symbols')
+let g:airline_symbols = {}
+endif
+
+" unicode symbols
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
+let g:airline_symbols.crypt = ''
+let g:airline_symbols.linenr = ''
+let g:airline_symbols.maxlinenr = ''
+let g:airline_symbols.branch = 'B'
+let g:airline_symbols.paste = ''
+let g:airline_symbols.spell = ''
+let g:airline_symbols.notexists = ''
+let g:airline_symbols.whitespace = ''
+let g:airline_symbols.readonly = 'RO'
+let g:airline_section_z = "[%l:%v:%p%%:%o]"
 
 python3 << EOF
 def save_colorscheme():
@@ -1053,5 +1085,17 @@ let g:tagbar_type_tex = {
     \ 'sort'    : 0,
 \ }
 
-" comment
-vmap / <leader>ci
+" comment selection
+vmap / <leader>cs
+" uncomment selection
+vmap ? <leader>c<space>
+
+" nerd commenter
+let g:NERDCustomDelimiters = {
+    \ 'apdu': { 'left': '//'},
+    \ 'c': { 'left': '//'},
+    \ 'cpp': { 'left': '//'},
+    \ 'java': { 'left': '//'},
+    \ 'autohotkey': { 'left': ';'},
+\ }
+
