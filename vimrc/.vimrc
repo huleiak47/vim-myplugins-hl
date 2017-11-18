@@ -119,9 +119,6 @@ set diffexpr=MyDiff()
 
 syntax on
 
-" Refresh syntax hightlight when file open or written
-autocmd BufReadPost,BufWritePost * syntax sync fromstart
-
 filetype on
 filetype plugin on
 filetype indent on
@@ -213,11 +210,11 @@ if g:isWin
     if g:isGUI
         set encoding=utf-8
         set ambiwidth=double
-        "set guifont=droid_sans_mono:h11
-        set guifont=Courier_New:h10
+        set guifont=Droid_Sans_Mono:h10
+        "set guifont=Courier_New:h10
         "set guifont=Consolas:h11
-        set guifontwide=NSimSun:h11
-        set linespace=0
+        set guifontwide=SimHei:h11
+        set linespace=1
         set cursorline "高亮当前行
         source $VIMRUNTIME/delmenu.vim
         source $VIMRUNTIME/menu.vim
@@ -421,7 +418,7 @@ endif
 
 "tagbar setting
 let g:tagbar_ctags_bin = 'ctags'
-let g:tagbar_left = 1
+let g:tagbar_left = 0
 let g:tagbar_width = 40
 let g:tagbar_expand = 0
 let g:tagbar_show_linenumbers = -1
@@ -434,7 +431,7 @@ let g:tagbar_sort = 0
 
 
 nnoremap <silent> ,ot :TagbarToggle<CR>
-nnoremap <silent> <F2> :TagbarToggle<CR>
+nnoremap <silent> <S-F2> :TagbarToggle<CR>
 
 "CScope
 if has("cscope")
@@ -504,6 +501,9 @@ function! CallNERDTree()
     let @/ = temp
 endfunction
 nnoremap <silent> ,dd :call CallNERDTree()<CR>
+
+nnoremap <silent> <F2> :NERDTreeToggle<CR>
+nnoremap <silent> <C-F2> :NERDTree<CR>
 
 function! QuickFixWindowToggle()
     let g:my_has_quickfix = 0
@@ -670,6 +670,7 @@ function! MyReplaceCurrentWord()
 endfunction
 "替换光标下的单词
 nnoremap <silent> ,rw :call MyReplaceCurrentWord()<CR>
+nnoremap <silent> <M-w> :call MyReplaceCurrentWord()<CR>
 
 function! MyReplaceInput()
     let s = input("Input partten: ")
@@ -679,6 +680,7 @@ function! MyReplaceInput()
 endfunction
 
 nnoremap <silent> ,rp :call MyReplaceInput()<CR>
+nnoremap <silent> <M-r> :call MyReplaceInput()<CR>
 
 "find count of the word under the cursor
 nnoremap <silent> ,ct :%s/\<<C-R>=expand("<cword>")<CR>\>//n<CR>
@@ -702,6 +704,7 @@ function! MyReplaceSelection()
 endfunction
 "替换选中的文本
 vnoremap <silent> ,rp :call MyReplaceSelection()<CR>
+vnoremap <silent> <M-r> :call MyReplaceSelection()<CR>
 
 "Cscope 的映射
 "set cscopetag
@@ -773,11 +776,17 @@ inoremap <silent> <C-F> <C-X><C-F>
 
 "复制，选择，剪切和粘贴
 nnoremap <silent> ,yy "+Y`]
+nnoremap <silent> <M-y> "+Y`]
 nnoremap <silent> ,pp "+p`]
+nnoremap <silent> <M-p> "+p`]
 nnoremap <silent> ,PP "+P`]
+nnoremap <silent> <M-P> "+P`]
 vnoremap <silent> ,yy "+y`]
+vnoremap <silent> <M-y> "+y`]
 vnoremap <silent> ,pp "+p`]
+vnoremap <silent> <M-p> "+p`]
 vnoremap <silent> ,PP "+P`]
+vnoremap <silent> <M-P> "+P`]
 vnoremap <silent> <C-C> "+y`]
 vnoremap <silent> <C-X> "+d`]
 
@@ -809,7 +818,7 @@ endfunction
 nnoremap <silent> <F1> :call HelpThisWord()<CR>
 vnoremap <silent> <F1> :call HelpSelection()<CR>
 
-"CTRL-F1,F2,F3分别复制文件目录，文件名，文件路径
+"分别复制文件目录，文件名，文件路径
 if g:isWin
     nnoremap <silent> ,yd :let @+ = substitute(expand("%:p:h"), "/", "\\", "g")<CR>
     nnoremap <silent> ,yn :let @+ = substitute(expand("%:p:t"), "/", "\\", "g")<CR>
@@ -841,7 +850,7 @@ function! OnInit()
         wincmd =
         set colorcolumn=
     else
-        set colorcolumn=81
+        set colorcolumn=81,121
     endif
 endfunction
 
@@ -892,11 +901,17 @@ endfunction
 nnoremap <silent> ,rs :call ClearSpaceAtEOL()<CR>
 
 nnoremap <silent> ,pgw :VPGrepThisWord<CR>
+nnoremap <silent> <M-*> :VPGrepThisWord<CR>
 nnoremap <silent> ,pgp :VPGrepInput<CR>
+nnoremap <silent> <M-F> :VPGrepInput<CR>
 vnoremap <silent> ,pgp :<C-U>VPGrepSelection<CR>
+vnoremap <silent> <M-F> :<C-U>VPGrepSelection<CR>
 nnoremap <silent> ,prw :VPReplaceThisWord<CR>
+nnoremap <silent> <M-W> :VPReplaceThisWord<CR>
 nnoremap <silent> ,prp :VPReplaceInput<CR>
+nnoremap <silent> <M-R> :VPReplaceInput<CR>
 vnoremap <silent> ,prp :VPReplaceSelection<CR>
+vnoremap <silent> <M-R> :VPReplaceSelection<CR>
 
 "自动提示
 let g:acp_enableAtStartup = 0
@@ -952,6 +967,9 @@ set backspace=indent,eol,start
 let g:Align_xstrlen=3
 
 let loaded_snips=1
+
+" map = to align =
+vnoremap = :Align =<CR>gv<ESC>
 
 "xptemplate
 let g:xptemplate_brace_complete = 0
@@ -1042,9 +1060,12 @@ set suffixes=.bak,~,.o,.info,.swp,.tmp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90
 let g:ctrlp_map = ',ff'
 let g:ctrlp_by_filename = 1
 let g:ctrlp_custom_ignore = {'file': '\V\(' . join(split(&suffixes, ','), '\|') . '\)\$'}
-let g:ctrlp_root_markers = ['.project']
+let g:ctrlp_root_markers = ['.project', '.git', '.vscode']
 let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'undo', 'dir', 'autoignore']
+nmap <M-f> ,ff
+nnoremap <M-o> :CtrlPBufTag<CR>
+nnoremap <M-O> :CtrlPTag<CR>
 
 " jts file
 au BufReadPost *.jts setf pascal
@@ -1090,12 +1111,16 @@ vmap / <leader>cs
 " uncomment selection
 vmap ? <leader>c<space>
 
+" switch comment status
+nmap ? <leader>c<space>
+
 " nerd commenter
 let g:NERDCustomDelimiters = {
     \ 'apdu': { 'left': '//'},
     \ 'c': { 'left': '//'},
     \ 'cpp': { 'left': '//'},
     \ 'java': { 'left': '//'},
+    \ 'vimproj': { 'left': '#'},
     \ 'autohotkey': { 'left': ';'},
 \ }
 
