@@ -502,8 +502,8 @@ function! CallNERDTree()
 endfunction
 nnoremap <silent> ,dd :call CallNERDTree()<CR>
 
-nnoremap <silent> <F2> :NERDTreeToggle<CR>
-nnoremap <silent> <C-F2> :NERDTree<CR>
+nnoremap <silent> <F2> :NERDTreeToggle<CR><C-W>l
+nnoremap <silent> <C-F2> :NERDTree<CR><C-W>l
 
 function! QuickFixWindowToggle()
     let g:my_has_quickfix = 0
@@ -947,7 +947,9 @@ let g:indent_guides_guide_size = 1
 let g:tex_comment_nospell = 1
 let g:tex_conceal=""
 
+" NERDTree setting
 let NERDTreeShowLineNumbers=1
+let NERDTreeWinSize=45
 
 "python syntax
 let g:python_highlight_all=1
