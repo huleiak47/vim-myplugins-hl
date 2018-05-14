@@ -152,11 +152,11 @@ def FormatCode(tp):
             cmds.append("%!")
         else:
             cmds.append("'<,'>!")
-        if tenc != enc:
-            cmds.append("recoding %s | " % tenc)
+        #if tenc != enc:
+            #cmds.append("recoding %s | " % tenc)
         cmds.append("yapf")
-        if tenc != enc:
-            cmds.append(" | recoding %s" % enc)
+        #if tenc != enc:
+        #    cmds.append(" | recoding %s" % enc)
         vim.command("".join(cmds))
     else:
         if tp == 0:
@@ -210,10 +210,12 @@ if g:isWin
     if g:isGUI
         set encoding=utf-8
         set ambiwidth=double
-        set guifont=Droid_Sans_Mono:h10
+        set guifont=Sarasa_Term_SC:h11
+        set guifontwide=Sarasa_Term_SC:h11
+        "set guifont=Droid_Sans_Mono:h11
         "set guifont=Courier_New:h10
         "set guifont=Consolas:h11
-        set guifontwide=SimHei:h11
+        "set guifontwide=SimHei:h12
         set linespace=1
         set cursorline "高亮当前行
         source $VIMRUNTIME/delmenu.vim
@@ -248,9 +250,10 @@ endif
 
 if g:isGUI && !exists("s:has_inited")
     let s:has_inited = 1
-    set lines=40 columns=120
+    set lines=40 columns=160
 endif
 
+set rop=type:directx,gamma:2.0
 set textwidth=80
 set hidden
 set fdl=99
@@ -302,6 +305,9 @@ let g:ycm_key_list_previous_completion = ['<Up>']
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_python_binary_path = 'C:\\Python36-32\\python.exe'
 let g:ycm_server_python_interpreter = 'C:\\Python36-32\\python.exe'
+let g:ycm_semantic_triggers = {
+    \ 'c,cpp,python,java,cs,javascript': ['re!\w{2}'],
+    \}
 
 "eclim plugin
 let g:EclimCompletionMethod = 'omnifunc'
@@ -929,6 +935,7 @@ autocmd FileType javascript setl omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html setl omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setl omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml setl omnifunc=xmlcomplete#CompleteTags
+autocmd FileType python setl omnifunc=youcompleteme#CompleteFunc
 
 
 nnoremap <silent> <C-N> :silent cn<CR>
@@ -1065,7 +1072,9 @@ let g:ctrlp_custom_ignore = {'file': '\V\(' . join(split(&suffixes, ','), '\|') 
 let g:ctrlp_root_markers = ['.project', '.git', '.vscode']
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'undo', 'dir', 'autoignore']
-nmap <M-f> ,ff
+nnoremap <M-f> :CtrlPMixed<CR>
+nnoremap <M-b> :CtrlPBuffer<CR>
+nnoremap <M-l> :CtrlPLine<CR>
 nnoremap <M-o> :CtrlPBufTag<CR>
 nnoremap <M-O> :CtrlPTag<CR>
 
@@ -1081,6 +1090,7 @@ let g:ale_linters = {
 \   'c': [],
 \   'cpp': [],
 \   'java': [],
+\   'tex': [],
 \}
 
 " 使用 ppppp 进行多行多次粘贴操作
