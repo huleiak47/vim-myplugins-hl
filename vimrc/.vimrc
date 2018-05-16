@@ -40,7 +40,7 @@ Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
 Plugin 'huleiak47/vim-AHKcomplete'
 Plugin 'w0rp/ale'
-Plugin 'joshdick/onedark.vim'
+Plugin 'huleiak47/onedark.vim'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
@@ -210,8 +210,8 @@ if g:isWin
     if g:isGUI
         set encoding=utf-8
         set ambiwidth=double
-        set guifont=Sarasa_Term_SC:h11
-        set guifontwide=Sarasa_Term_SC:h11
+        set guifont=Sarasa_Term_SC:h10.5
+        set guifontwide=Sarasa_Term_SC:h10.5
         "set guifont=Droid_Sans_Mono:h11
         "set guifont=Courier_New:h10
         "set guifont=Consolas:h11
