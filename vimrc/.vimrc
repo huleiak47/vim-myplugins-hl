@@ -1064,15 +1064,20 @@ autocmd FileType autohotkey setl omnifunc=ahkcomplete#Complete
 " pandoc
 autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
 
-set suffixes=.bak,~,.o,.info,.swp,.tmp,.obj,.pdb,.asm,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv,.lib,.a,.suo,.sdf,.bin,.exe,.dll,.sbr,.cap,.dblite,.zip,.rar,.7z,.tar,.gz,.jar,.ilk,.exp
+set suffixes=.bak,~,.o,.info,.swp,.tmp,.obj,.pdb,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv,.lib,.a,.suo,.sdf,.bin,.exe,.dll,.sbr,.cap,.dblite,.zip,.rar,.7z,.tar,.gz,.jar,.ilk,.exp
 " ctrlP
 let g:ctrlp_map = ',ff'
 let g:ctrlp_by_filename = 1
-let g:ctrlp_custom_ignore = {'file': '\V\(' . join(split(&suffixes, ','), '\|') . '\)\$'}
-let g:ctrlp_root_markers = ['.project', '.git', '.vscode']
+let g:ctrlp_show_hidden = 1
+let g:ctrlp_root_markers = ['.ctrlpignore', '.project', '.git', '.vscode', '.svn', '.hg']
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'undo', 'dir', 'autoignore']
-nnoremap <M-f> :CtrlPMixed<CR>
+let g:ctrlp_custom_ignore = {
+\ 'dir':  '\v[\/](\.git|\.hg|\.svn|__pycache__)$',
+\ 'file': '\v\.(exe|so|dll)$',
+\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+\ }
+nnoremap <M-f> :CtrlP<CR>
 nnoremap <M-b> :CtrlPBuffer<CR>
 nnoremap <M-l> :CtrlPLine<CR>
 nnoremap <M-o> :CtrlPBufTag<CR>
