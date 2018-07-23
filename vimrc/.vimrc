@@ -16,7 +16,7 @@ call vundle#rc($HOME . '/.vimplugins')
 endif
 
 
-"first time use git clone https://github.com/gmarik/vundle.git  ~/.vim/plugins/vundle to get vundle
+"first time use git clone https://github.com/gmarik/vundle.git  ~/.vimplugins/vundle to get vundle
 "
 " Plugins
 Plugin 'gmarik/vundle'
@@ -25,6 +25,7 @@ Plugin 'huleiak47/vim-myplugins-hl'
 Plugin 'huleiak47/vim-RelatedFile'
 Plugin 'Align'
 Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'netrw.vim'
@@ -39,57 +40,16 @@ Plugin 'xptemplate'
 Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
 Plugin 'huleiak47/vim-AHKcomplete'
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'w0rp/ale'
 Plugin 'huleiak47/onedark.vim'
+Plugin 'sbdchd/neoformat'
+Plugin 'Yggdroot/LeaderF'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Tagbar'
-Plugin 'ctrlpvim/ctrlp.vim'
-endif
-
-if g:isWin
-python3 << PYTHONEOF
-
-import os
-import vim
-import ctypes
-
-# to speed up loading
-def get_file_type_name():
-    if not vim.eval("g:isWin"):
-        return
-    isdiff = vim.eval("&diff")
-    GetCommandLine = ctypes.windll.kernel32.GetCommandLineW
-    GetCommandLine.restype = ctypes.c_wchar_p
-    cmdline = GetCommandLine()
-    cmdline = cmdline.strip('"')
-    ftype = os.path.splitext(cmdline)[1].lower()
-    if not ftype:
-        ftype = cmdline.split(" ")[-1].lower()
-    vim.command("let g:file_type_name='%s'" % ftype)
-
-get_file_type_name()
-
-PYTHONEOF
-
-    if (g:file_type_name == ".py" || g:file_type_name == ".pyw" || g:file_type_name == ".vprj" || g:file_type_name == "sconstruct") && &diff == 0
-        Plugin 'Valloric/YouCompleteMe'
-    endif
-
-    if g:file_type_name == ".jvprj"
-        Plugin 'Valloric/YouCompleteMe'
-        Plugin 'vim-eclim'
-    endif
-
-else
-
-    if &diff == 0
-        Plugin 'Valloric/YouCompleteMe'
-        Plugin 'vim-eclim'
-    endif
-
-
+Plugin 'Valloric/YouCompleteMe'
 endif
 
 " --------------------------------------------------------
@@ -123,78 +83,6 @@ filetype on
 filetype plugin on
 filetype indent on
 
-"python接口
-
-python3 << EOF_PYTHON
-
-import vim
-import sys
-import os
-import re
-
-#格式化代码文件
-def FormatCode(tp):
-    ft = vim.eval('&filetype')
-    line = int(vim.eval('line(".")'))
-    col = int(vim.eval('col(".")'))
-    vim.command('normal H')
-    vim.command('normal mx')
-    if ft in ('c', 'cpp', 'java', 'cs'):
-        if tp == 0: #format all code
-            vim.command('%!astyle_c')
-        else:
-            vim.command("'<,'>!astyle_c")
-    elif ft in ('python',):
-        tenc = vim.eval('&termencoding')
-        enc = vim.eval('&encoding')
-        cmds = []
-        if tp == 0:
-            cmds.append("%!")
-        else:
-            cmds.append("'<,'>!")
-        #if tenc != enc:
-            #cmds.append("recoding %s | " % tenc)
-        cmds.append("yapf")
-        #if tenc != enc:
-        #    cmds.append(" | recoding %s" % enc)
-        vim.command("".join(cmds))
-    else:
-        if tp == 0:
-            vim.command("normal gg=G")
-        else:
-            vim.command("normal =")
-    vim.command('normal `x')
-    vim.command('normal zt')
-    vim.command('call setpos(".", [0, %d, %d, 0])' % (line, col))
-
-def change_guifont_size(inc = True):
-    guifont = vim.eval("&guifont")
-    guifontwide = vim.eval("&guifontwide")
-    ptn = re.compile("^(.*:h)(\d+)$")
-    cmds = []
-    for font, name in [(guifont, "guifont"), (guifontwide, "guifontwide")]:
-        mobj = ptn.match(font)
-        if mobj:
-            fontsize = int(mobj.group(2))
-            if inc:
-                if fontsize < 40:
-                    fontsize += 1
-                else:
-                    return
-            else:
-                if fontsize > 1:
-                    fontsize -= 1
-                else:
-                    return
-            cmds.append("set {}={}{:d}".format(name, mobj.group(1), fontsize))
-    for cmd in cmds:
-        vim.command(cmd)
-
-EOF_PYTHON
-
-nnoremap <silent> ,fti :python3 change_guifont_size(True)<CR>
-nnoremap <silent> ,fto :python3 change_guifont_size(False)<CR>
-
 "==================================================================
 "通用的配置
 autocmd FileType dosbatch setl fileformat=dos | setl fenc=gbk
@@ -206,7 +94,8 @@ if g:isWin
     if &fenc == "" && &modifiable
         set fenc=ascii
     endif
-    set fileformats=dos,unix
+    "set fileformats=dos,unix
+    set fileformats=unix,dos
     if g:isGUI
         set encoding=utf-8
         set ambiwidth=double
@@ -224,15 +113,17 @@ if g:isWin
         language messages en_US.utf-8
     else
         language messages en_US.utf-8
-        set encoding=gbk
+        set encoding=utf-8
         colorscheme neon
         set nocursorline
     endif
     set termencoding=gbk
 else
-    set guifont=DejaVu\ Sans\ Mono\ 10
+    "set guifont=DejaVu\ Sans\ Mono\ 9
     "set guifontwide=WenQuanYi\ Zen\ Hei\ 12
-    set guifontwide=文泉驿等宽微米黑\ 10
+    "set guifontwide=文泉驿等宽微米黑\ 10
+    set guifont=Sarasa\ Term\ SC\ 10
+    set guifontwide=Sarasa\ Term\ SC\ 10
     set linespace=0
     set fencs=ascii,ucs-bom,utf-8,gb18030,big5,latin-1,utf-16
     if &fenc == "" && &modifiable
@@ -283,14 +174,14 @@ set sessionoptions=help,blank,buffers,options,folds,resize,winpos,winsize
 set completeopt=menuone,longest,preview
 
 " YouCompleteMe settings
-autocmd FileType c,cpp,python nnoremap <buffer> ,gf :YcmCompleter GoToDefinition<CR>
-autocmd FileType c,cpp,python nnoremap <buffer> ,gc :YcmCompleter GoToDeclaration<CR>
-autocmd FileType c,cpp,python nnoremap <buffer> ,gt :YcmCompleter GoTo<CR>
-autocmd FileType java nnoremap <buffer> ,gt :JavaSearchContext<CR>
-autocmd FileType python nnoremap <buffer> <C-]> :YcmCompleter GoTo<CR>
-autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yc :YcmCompleter
-autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yd :YcmDiags<CR>
-autocmd FileType c,cpp,python,cs,javascript,rust,go nnoremap <buffer> ,yf :YcmCompleter FixIt<CR>
+autocmd FileType c,cpp,python,java nnoremap <buffer> ,gf :YcmCompleter GoToDefinition<CR>
+autocmd FileType c,cpp,python,java nnoremap <buffer> ,gc :YcmCompleter GoToDeclaration<CR>
+autocmd FileType c,cpp,python,java nnoremap <buffer> ,gt :YcmCompleter GoTo<CR>
+autocmd FileType python,java nnoremap <buffer> <C-]> :YcmCompleter GoTo<CR>
+autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,gc :YcmCompleter GoToReferences<CR>
+autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,yc :YcmCompleter
+autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,yd :YcmDiags<CR>
+autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,yf :YcmCompleter FixIt<CR>
 let g:ycm_add_preview_to_completeopt=1
 let g:ycm_complete_in_comments = 0
 let g:ycm_complete_in_strings = 1
@@ -303,17 +194,13 @@ let g:ycm_warning_symbol = 'W>'
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
 let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_python_binary_path = 'C:\\Python36-32\\python.exe'
-let g:ycm_server_python_interpreter = 'C:\\Python36-32\\python.exe'
+if g:isWin
+    let g:ycm_python_binary_path = 'C:\\Python36-32\\python.exe'
+    let g:ycm_server_python_interpreter = 'C:\\Python36-32\\python.exe'
+endif
 let g:ycm_semantic_triggers = {
     \ 'c,cpp,python,java,cs,javascript': ['re!\w{2}'],
     \}
-
-"eclim plugin
-let g:EclimCompletionMethod = 'omnifunc'
-let g:EclimProjectRefreshFiles = 0
-let g:EclimXmlValidate = 0
-
 
 set vb t_vb=
 autocmd GUIEnter * set vb t_vb=
@@ -424,7 +311,7 @@ endif
 
 "tagbar setting
 let g:tagbar_ctags_bin = 'ctags'
-let g:tagbar_left = 0
+let g:tagbar_left = 1
 let g:tagbar_width = 40
 let g:tagbar_expand = 0
 let g:tagbar_show_linenumbers = -1
@@ -571,9 +458,19 @@ nnoremap <silent> ,pel :VPEditFileListFile<CR>
 nnoremap <silent> ,pt :VPStartTerminal<CR>
 
 if g:isWin
-    noremap <silent> ,tt :python3 import subprocess as sb; sb.Popen("start Console.exe", shell=1)<CR>
+python3 << PYTHON_CMD
+import subprocess as sp
+import platform
+def open_console():
+    if int(platform.win32_ver()[0]) >= 10:
+        sp.Popen("start cmd.exe /c cmdex.exe", shell=1) # cmd.exe for Win10 is good enought
+    else:
+        sp.Popen("start Console.exe -t cmdex", shell=1)
+
+PYTHON_CMD
+    noremap <silent> ,tt :python3 open_console()<CR>
 else
-    noremap <silent> ,tt :python3 import subprocess as sb; sb.Popen("gnome-terminal")<CR>
+    noremap <silent> ,tt :python3 import subprocess as sp; sp.Popen("gnome-terminal")<CR>
 endif
 
 noremap <silent> ,rc :e $vimrc<CR>
@@ -581,8 +478,26 @@ noremap <silent> ,rC :so $vimrc<CR>
 
 noremap <silent> ,w :update<CR>
 
-nnoremap <silent> ,fm :python3 FormatCode(0)<CR>
-vnoremap <silent> ,fm :python3 FormatCode(1)<CR>
+" neoformat
+nnoremap <silent> ,fm :Neoformat<CR>
+vnoremap <silent> ,fm :Neoformat &ft<CR>
+" neoformat python
+let g:neoformat_enabled_python = ['yapf', 'autopep8', 'docformatter']
+
+" neoformat c/cpp/cs/java
+let g:neoformat_c_astyle = {
+            \ 'exe': 'astyle',
+            \ 'args': ['--style=allman', '--indent=spaces=4', '--align-pointer=type', '--align-reference=type', '--indent-cases', '--indent-preproc-define', '--indent-col1-comments', '--pad-oper', '--pad-header', '--unpad-paren', '--add-brackets', '--convert-tabs', '--mode=c', '-z2', '-n'],
+            \ 'stdin': 1,
+            \ }
+let g:neoformat_cpp_astyle = g:neoformat_c_astyle
+let g:neoformat_cs_astyle = g:neoformat_c_astyle
+let g:neoformat_java_astyle = g:neoformat_c_astyle
+let g:neoformat_enabled_c = ['astyle', 'clang-format']
+let g:neoformat_enabled_cpp = ['astyle', 'clang-format']
+let g:neoformat_enabled_cs = ['astyle', 'clang-format']
+let g:neoformat_enabled_java = ['astyle', 'clang-format']
+
 nnoremap <silent> ,dx :Dox<CR>
 nnoremap <silent> ,doxl :DoxLic<CR>
 
@@ -782,21 +697,33 @@ inoremap <silent> <C-F> <C-X><C-F>
 
 "复制，选择，剪切和粘贴
 nnoremap <silent> ,yy "+Y`]
-nnoremap <silent> <M-y> "+Y`]
 nnoremap <silent> ,pp "+p`]
-nnoremap <silent> <M-p> "+p`]
 nnoremap <silent> ,PP "+P`]
-nnoremap <silent> <M-P> "+P`]
 vnoremap <silent> ,yy "+y`]
-vnoremap <silent> <M-y> "+y`]
+vnoremap <silent> <C-c> "+y`]
 vnoremap <silent> ,pp "+p`]
-vnoremap <silent> <M-p> "+p`]
-vnoremap <silent> ,PP "+P`]
-vnoremap <silent> <M-P> "+P`]
-vnoremap <silent> <C-C> "+y`]
-vnoremap <silent> <C-X> "+d`]
+vnoremap <silent> <C-v> "+p`]
+vnoremap <silent> ,xx "+d`]
+vnoremap <silent> <C-x> "+d`]
+"inoremap <script> <C-v> <C-o>"+P
+exe 'inoremap <script> <C-v>' paste#paste_cmd['i']
+exe 'vnoremap <script> <C-v>' paste#paste_cmd['v']
 
-noremap <silent> <C-A> <ESC>gg<S-V>G
+inoremap <silent> <C-a> <C-O>gg<C-O><S-V>G
+vnoremap <silent> <C-a> <ESC>gg<S-V>G
+nnoremap <silent> <C-a> <ESC>gg<S-V>G
+cmap <C-v> <C-R>+
+
+" 使用 ppppp 进行多行多次粘贴操作
+vnoremap <silent> y y`]
+vnoremap <silent> p p`]
+nnoremap <silent> p p`]
+
+" 通过 12<Space> 跳转到第 12 行
+" 按 <Space> 跳到行文件末尾。
+" 按 <Backspace> 回到文件开始。
+nnoremap <Space> G
+nnoremap <BS> gg
 
 inoremap <silent> <C-BS> <C-W>
 cmap <C-BS> <C-W>
@@ -805,12 +732,6 @@ cmap <c-y> <Plug>CmdlineCompleteBackward
 cmap <c-e> <Plug>CmdlineCompleteForward
 cmap <C-P> <Up>
 cmap <C-N> <Down>
-
-exe 'inoremap <script> <C-V>' paste#paste_cmd['i']
-exe 'vnoremap <script> <C-V>' paste#paste_cmd['v']
-inoremap <silent> <C-A> <C-O>gg<C-O><S-V>G
-cmap <C-V> <C-R>+
-nnoremap <C-V> "+gP
 
 function! HelpThisWord()
     exe 'help ' . expand('<cword>')
@@ -923,6 +844,10 @@ vnoremap <silent> <M-R> :VPReplaceSelection<CR>
 let g:acp_enableAtStartup = 0
 let g:acp_mappingDriven = 1
 
+"doxygen
+let g:doxygen_enhanced_color = 1
+autocmd FileType c,cpp,java,php exe 'setl syntax=' . &filetype . '.doxygen'
+
 "关于DoxygenToolkit的设置
 let g:DoxygenToolkit_versionString = "1.0"
 let g:DoxygenToolkit_authorName = "Hulei"
@@ -935,7 +860,7 @@ autocmd FileType javascript setl omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html setl omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setl omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml setl omnifunc=xmlcomplete#CompleteTags
-autocmd FileType python setl omnifunc=youcompleteme#CompleteFunc
+autocmd FileType python,java setl omnifunc=youcompleteme#CompleteFunc
 
 
 nnoremap <silent> <C-N> :silent cn<CR>
@@ -987,33 +912,8 @@ let g:xptemplate_highlight = 'following,next'
 "autocmd FileType python,vimproj silent! inoremap <buffer> <silent> ' '| silent! inoremap <buffer> <silent> " "
 
 
-"airline
-let g:airline#extensions#tagbar#enabled = 0
-let g:airline_theme = 'onedark'
-let g:airline#extensions#ycm#enabled = 1
-let g:airline#extensions#ycm#error_symbol = 'E:'
-let g:airline#extensions#ycm#warning_symbol = 'W:'
-let g:airline#extensions#eclim#enabled = 1
-
-if !exists('g:airline_symbols')
-let g:airline_symbols = {}
-endif
-
-" unicode symbols
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
-let g:airline_symbols.crypt = ''
-let g:airline_symbols.linenr = ''
-let g:airline_symbols.maxlinenr = ''
-let g:airline_symbols.branch = 'B'
-let g:airline_symbols.paste = ''
-let g:airline_symbols.spell = ''
-let g:airline_symbols.notexists = ''
-let g:airline_symbols.whitespace = ''
-let g:airline_symbols.readonly = 'RO'
-let g:airline_section_z = "[%l:%v:%p%%:%o]"
-
 python3 << EOF
+import os
 def save_colorscheme():
     if int(vim.eval("g:isGUI")):
         with open(vim.eval("$HOME") + "/.colorscheme", "w") as f:
@@ -1029,6 +929,32 @@ if int(vim.eval("g:isGUI")):
 EOF
 
 autocmd ColorScheme * python3 save_colorscheme()
+
+"airline
+let g:airline#extensions#tagbar#enabled = 0
+"let g:airline_theme = &background
+let g:airline#extensions#ycm#enabled = 1
+"let g:airline#extensions#ycm#error_symbol = 'E:'
+"let g:airline#extensions#ycm#warning_symbol = 'W:'
+
+"if !exists('g:airline_symbols')
+"let g:airline_symbols = {}
+"endif
+
+" unicode symbols
+" due to font sarasa, belows are not needed
+"let g:airline_left_sep = ''
+"let g:airline_right_sep = ''
+"let g:airline_symbols.crypt = ''
+"let g:airline_symbols.linenr = ''
+"let g:airline_symbols.maxlinenr = ''
+"let g:airline_symbols.branch = 'B'
+"let g:airline_symbols.paste = ''
+"let g:airline_symbols.spell = ''
+"let g:airline_symbols.notexists = ''
+"let g:airline_symbols.whitespace = ''
+"let g:airline_symbols.readonly = 'RO'
+"let g:airline_section_z = "[%l:%v:%p%%:%o]"
 
 if !g:isGUI
     let g:indentLine_loaded = 1
@@ -1064,24 +990,32 @@ autocmd FileType autohotkey setl omnifunc=ahkcomplete#Complete
 " pandoc
 autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
 
-set suffixes=.bak,~,.o,.info,.swp,.tmp,.obj,.pdb,.class,.pyc,.pyo,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv,.lib,.a,.suo,.sdf,.bin,.exe,.dll,.sbr,.cap,.dblite,.zip,.rar,.7z,.tar,.gz,.jar,.ilk,.exp
-" ctrlP
-let g:ctrlp_map = ',ff'
-let g:ctrlp_by_filename = 1
-let g:ctrlp_show_hidden = 1
-let g:ctrlp_root_markers = ['.ctrlpignore', '.project', '.git', '.vscode', '.svn', '.hg']
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'undo', 'dir', 'autoignore']
-let g:ctrlp_custom_ignore = {
-\ 'dir':  '\v[\/](\.git|\.hg|\.svn|__pycache__)$',
-\ 'file': '\v\.(exe|so|dll)$',
-\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
-\ }
-nnoremap <M-f> :CtrlP<CR>
-nnoremap <M-b> :CtrlPBuffer<CR>
-nnoremap <M-l> :CtrlPLine<CR>
-nnoremap <M-o> :CtrlPBufTag<CR>
-nnoremap <M-O> :CtrlPTag<CR>
+set suffixes=.bak,~,.o,.info,.swp,.tmp,.obj,.pdb,.class,.pyc,.pyo,.pyd,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv,.lib,.a,.suo,.sdf,.bin,.exe,.dll,.sbr,.cap,.dblite,.zip,.rar,.7z,.tar,.gz,.jar,.ilk,.exp,.so
+
+"LeaderF
+let g:Lf_RootMarkers = ['.git', '.hg', '.svn', '.vprj', '.vscode', '.project']
+let g:Lf_WildIgnore = {
+        \ 'dir': ['.svn','.git','.hg', '.vscode', '__pycache__'],
+        \ 'file': map(split(&suffixes, ','), '"*" . v:val')
+        \}
+
+let g:Lf_WorkingDirectoryMode = 'AF'
+let g:Lf_ShortcutF = ',ff'
+let g:Lf_ShortcutB = ',fb'
+let g:Lf_UseVersionControlTool = 0
+let g:Lf_DefaultExternalTool = ""
+let g:Lf_PreviewCode = 1
+let g:Lf_FollowLinks = 1
+
+nnoremap <M-f> :LeaderfFile<CR>
+nnoremap <M-b> :LeaderfBuffer<CR>
+nnoremap <M-l> :LeaderfLine<CR>
+nnoremap ,fl :LeaderfLine<CR>
+nnoremap <M-L> :LeaderfLineAll<CR>
+nnoremap <M-o> :LeaderfBufTag<CR>
+nnoremap ,fo :LeaderfBufTag<CR>
+nnoremap <M-O> :LeaderfTag<CR>
+nnoremap ,ft :LeaderfTag<CR>
 
 " jts file
 au BufReadPost *.jts setf pascal
@@ -1097,17 +1031,6 @@ let g:ale_linters = {
 \   'java': [],
 \   'tex': [],
 \}
-
-" 使用 ppppp 进行多行多次粘贴操作
-vnoremap <silent> y y`]
-vnoremap <silent> p p`]
-nnoremap <silent> p p`]
-
-" 通过 12<Space> 跳转到第 12 行
-" 按 <Space> 跳到行文件末尾。
-" 按 <Backspace> 回到文件开始。
-nnoremap <Space> G
-nnoremap <BS> gg
 
 
 " latex for tagbar
