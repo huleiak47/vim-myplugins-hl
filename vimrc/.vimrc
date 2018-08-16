@@ -150,7 +150,7 @@ set hidden
 set fdl=99
 set numberwidth=5
 set number
-set relativenumber
+set norelativenumber
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -287,6 +287,7 @@ set diffopt=filler,vertical
 
 autocmd FileType make,tags setl noexpandtab
 set foldmethod=indent
+set winfixheight
 
 " -------------------------------
 
@@ -312,7 +313,7 @@ endif
 "tagbar setting
 let g:tagbar_ctags_bin = 'ctags'
 let g:tagbar_left = 1
-let g:tagbar_width = 40
+let g:tagbar_width = 45
 let g:tagbar_expand = 0
 let g:tagbar_show_linenumbers = -1
 if g:isWin
@@ -381,7 +382,6 @@ noremap <silent> ,xr :% !xxd -g 1 -r<CR>
 nnoremap <silent> ,/ :let @/=""<CR>
 
 nnoremap <silent> ,bb :BufExplorer<CR>
-nnoremap <silent> B :BufExplorer<CR>
 
 "打开NERDTree并且定位到当前文件
 function! CallNERDTree()
@@ -399,17 +399,10 @@ nnoremap <silent> <F2> :NERDTreeToggle<CR><C-W>l
 nnoremap <silent> <C-F2> :NERDTree<CR><C-W>l
 
 function! QuickFixWindowToggle()
-    let g:my_has_quickfix = 0
-    if &buftype == 'quickfix'
-        let g:my_has_quickfix = 1
-        wincmd W
-    else
-        call Windo("if &buftype == 'quickfix' | let g:my_has_quickfix = 1 | endif")
-    endif
-    if g:my_has_quickfix
+    if len(filter(range(1, winnr('$')), 'getwinvar(v:val, "&ft") == "qf"'))
         execute "cclose"
     else
-        execute "copen 15"
+        execute "botright copen 15"
         wincmd p
     endif
 endfunction
@@ -485,18 +478,25 @@ vnoremap <silent> ,fm :Neoformat &ft<CR>
 let g:neoformat_enabled_python = ['yapf', 'autopep8', 'docformatter']
 
 " neoformat c/cpp/cs/java
-let g:neoformat_c_astyle = {
+let g:neoformat_cs_astyle = {
             \ 'exe': 'astyle',
             \ 'args': ['--style=allman', '--indent=spaces=4', '--align-pointer=type', '--align-reference=type', '--indent-cases', '--indent-preproc-define', '--indent-col1-comments', '--pad-oper', '--pad-header', '--unpad-paren', '--add-brackets', '--convert-tabs', '--mode=c', '-z2', '-n'],
             \ 'stdin': 1,
             \ }
-let g:neoformat_cpp_astyle = g:neoformat_c_astyle
-let g:neoformat_cs_astyle = g:neoformat_c_astyle
-let g:neoformat_java_astyle = g:neoformat_c_astyle
-let g:neoformat_enabled_c = ['astyle', 'clang-format']
-let g:neoformat_enabled_cpp = ['astyle', 'clang-format']
-let g:neoformat_enabled_cs = ['astyle', 'clang-format']
-let g:neoformat_enabled_java = ['astyle', 'clang-format']
+
+let g:neoformat_c_clangformat = {
+            \ 'exe': 'clang-format',
+            \ 'args': ['-style=file'],
+            \ 'stdin': 1,
+            \}
+
+let g:neoformat_cpp_clangformat = g:neoformat_c_clangformat
+let g:neoformat_java_clangformat = g:neoformat_c_clangformat
+        
+let g:neoformat_enabled_c = ['clangformat']
+let g:neoformat_enabled_cpp = ['clangformat']
+let g:neoformat_enabled_java = ['clangformat']
+let g:neoformat_enabled_cs = ['astyle']
 
 nnoremap <silent> ,dx :Dox<CR>
 nnoremap <silent> ,doxl :DoxLic<CR>
@@ -1006,9 +1006,11 @@ let g:Lf_UseVersionControlTool = 0
 let g:Lf_DefaultExternalTool = ""
 let g:Lf_PreviewCode = 1
 let g:Lf_FollowLinks = 1
+let g:Lf_WindowPosition = 'top'
 
 nnoremap <M-f> :LeaderfFile<CR>
 nnoremap <M-b> :LeaderfBuffer<CR>
+nnoremap B :LeaderfBuffer<CR>
 nnoremap <M-l> :LeaderfLine<CR>
 nnoremap ,fl :LeaderfLine<CR>
 nnoremap <M-L> :LeaderfLineAll<CR>
