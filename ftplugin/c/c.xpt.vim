@@ -6,9 +6,9 @@ fun! s:f.myHeaderSymbol(...) "{{{
   let h = expand('%:t')
   let h = substitute(h, '\.', '_', 'g') " replace . with _
   let h = substitute(h, '.', '\U\0', 'g') " make all characters upper case
-  let t = strftime("%Y%m%d%H%M%S")
+  "let t = strftime("%Y%m%d%H%M%S")
 
-  return '__'.h.'_'.t.'__'
+  return '__'.h.'__'
 endfunction "}}}
 
 

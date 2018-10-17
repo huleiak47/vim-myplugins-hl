@@ -45,6 +45,9 @@ Plugin 'w0rp/ale'
 Plugin 'huleiak47/onedark.vim'
 Plugin 'sbdchd/neoformat'
 Plugin 'Yggdroot/LeaderF'
+Plugin 'aklt/plantuml-syntax'
+Plugin 'pboettch/vim-cmake-syntax'
+Plugin 'richq/vim-cmake-completion'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
@@ -154,7 +157,7 @@ set norelativenumber
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-autocmd FileType tex setl tabstop=2 | setl softtabstop=2 | setl shiftwidth=2
+"autocmd FileType tex setl tabstop=2 | setl softtabstop=2 | setl shiftwidth=2
 set smarttab
 set autoindent
 autocmd FileType c,cpp,java,cs,javascript,php setl smartindent cindent
@@ -497,6 +500,13 @@ let g:neoformat_enabled_c = ['clangformat']
 let g:neoformat_enabled_cpp = ['clangformat']
 let g:neoformat_enabled_java = ['clangformat']
 let g:neoformat_enabled_cs = ['astyle']
+
+let g:neoformat_tex_latexindent = {
+        \ 'exe': 'latexindent',
+        \ 'args': ['-w', "--local=" . $HOME . "/latexindentSettings.yaml"],
+        \ 'stdin': 0,
+        \ 'replace': 1
+        \}
 
 nnoremap <silent> ,dx :Dox<CR>
 nnoremap <silent> ,doxl :DoxLic<CR>
@@ -995,7 +1005,7 @@ set suffixes=.bak,~,.o,.info,.swp,.tmp,.obj,.pdb,.class,.pyc,.pyo,.pyd,.lst,.s90
 "LeaderF
 let g:Lf_RootMarkers = ['.git', '.hg', '.svn', '.vprj', '.vscode', '.project']
 let g:Lf_WildIgnore = {
-        \ 'dir': ['.svn','.git','.hg', '.vscode', '__pycache__'],
+        \ 'dir': ['.*', '__pycache__'],
         \ 'file': map(split(&suffixes, ','), '"*" . v:val')
         \}
 
