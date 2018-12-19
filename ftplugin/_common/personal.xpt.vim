@@ -55,7 +55,7 @@ XSET date=date()
 `$CDL^
  `$CDM^ @brief `^
  `$CDM^ @file `file()^
- `$CDM^ @copyright Copyright(C) `strftime("%Y")^ `Nationz Technologies Inc^. All rights reserved.
+ `$CDM^ @copyright Copyright (c) `strftime("%Y")^, `Nations Technologies Inc^. All rights reserved.
  `$CDR^
 
 ..XPT

@@ -5,15 +5,9 @@ let g:isWin=(has("win32") || has("win64") || has("win32unix"))
 let g:isGUI=has("gui_running")
 let $vimrc = $HOME . "/.vimrc"
 
-if g:isWin
-" vundle plugins
-execute 'set rtp+=' . $VIM . '/plugins/vundle'
-call vundle#rc($VIM . '/plugins')
-else
 " vundle plugins
 execute 'set rtp+=' . $HOME . '/.vimplugins/vundle'
 call vundle#rc($HOME . '/.vimplugins')
-endif
 
 
 "first time use git clone https://github.com/gmarik/vundle.git  ~/.vimplugins/vundle to get vundle
@@ -37,8 +31,8 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'mattn/emmet-vim'
 Plugin 'xptemplate'
-Plugin 'vim-pandoc/vim-pandoc'
-Plugin 'vim-pandoc/vim-pandoc-syntax'
+"Plugin 'vim-pandoc/vim-pandoc'
+"Plugin 'vim-pandoc/vim-pandoc-syntax'
 Plugin 'huleiak47/vim-AHKcomplete'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'w0rp/ale'
@@ -48,6 +42,7 @@ Plugin 'Yggdroot/LeaderF'
 Plugin 'aklt/plantuml-syntax'
 Plugin 'pboettch/vim-cmake-syntax'
 Plugin 'richq/vim-cmake-completion'
+Plugin 'cespare/vim-toml'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
@@ -102,16 +97,16 @@ if g:isWin
     if g:isGUI
         set encoding=utf-8
         set ambiwidth=double
-        set guifont=Sarasa_Term_SC:h10.5
-        set guifontwide=Sarasa_Term_SC:h10.5
+        set guifont=Sarasa_Term_SC:h10
+        set guifontwide=Sarasa_Term_SC:h10
         "set guifont=Droid_Sans_Mono:h11
         "set guifont=Courier_New:h10
         "set guifont=Consolas:h11
         "set guifontwide=SimHei:h12
         set linespace=1
         set cursorline "高亮当前行
-        source $VIMRUNTIME/delmenu.vim
-        source $VIMRUNTIME/menu.vim
+        "source $VIMRUNTIME/delmenu.vim
+        "source $VIMRUNTIME/menu.vim
         "language messages zh_CN.utf-8
         language messages en_US.utf-8
     else
@@ -197,9 +192,10 @@ let g:ycm_warning_symbol = 'W>'
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
 let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_max_diagnostics_to_display = 0
 if g:isWin
-    let g:ycm_python_binary_path = 'C:\\Python36-32\\python.exe'
-    let g:ycm_server_python_interpreter = 'C:\\Python36-32\\python.exe'
+    let g:ycm_python_binary_path = $PYTHON_HOME . '\\python.exe'
+    let g:ycm_server_python_interpreter = $PYTHON_HOME . '\\python.exe'
 endif
 let g:ycm_semantic_triggers = {
     \ 'c,cpp,python,java,cs,javascript': ['re!\w{2}'],
@@ -265,7 +261,7 @@ set shortmess=aoOtTI
 "set fillchars=vert:\ ,stl:\ ,stlnc:\
 " 高亮显示匹配的括号
 
-"set guioptions-=m "To Remove menubar 不显示菜单栏
+set guioptions-=m "To Remove menubar 不显示菜单栏
 set guioptions-=T  "To  Remove toolbar   不显示工具栏
 set guioptions+=r "Uncomment this line to Remove v_scroll bar 不显示右侧的滚动条
 set guioptions-=R
@@ -478,10 +474,8 @@ noremap <silent> ,w :update<CR>
 nnoremap <silent> ,fm :Neoformat<CR>
 vnoremap <silent> ,fm :Neoformat &ft<CR>
 " neoformat python
-let g:neoformat_enabled_python = ['yapf', 'autopep8', 'docformatter']
-
-" neoformat c/cpp/cs/java
-let g:neoformat_cs_astyle = {
+"
+let g:neoformat_c_astyle = {
             \ 'exe': 'astyle',
             \ 'args': ['--style=allman', '--indent=spaces=4', '--align-pointer=type', '--align-reference=type', '--indent-cases', '--indent-preproc-define', '--indent-col1-comments', '--pad-oper', '--pad-header', '--unpad-paren', '--add-brackets', '--convert-tabs', '--mode=c', '-z2', '-n'],
             \ 'stdin': 1,
@@ -492,13 +486,16 @@ let g:neoformat_c_clangformat = {
             \ 'args': ['-style=file'],
             \ 'stdin': 1,
             \}
+let g:neoformat_cpp_astyle = g:neoformat_c_astyle
+let g:neoformat_java_astyle = g:neoformat_c_astyle
+let g:neoformat_cs_astyle = g:neoformat_c_astyle
 
 let g:neoformat_cpp_clangformat = g:neoformat_c_clangformat
 let g:neoformat_java_clangformat = g:neoformat_c_clangformat
-        
-let g:neoformat_enabled_c = ['clangformat']
-let g:neoformat_enabled_cpp = ['clangformat']
-let g:neoformat_enabled_java = ['clangformat']
+
+let g:neoformat_enabled_c = ['clangformat', 'astyle']
+let g:neoformat_enabled_cpp = ['clangformat', 'astyle']
+let g:neoformat_enabled_java = ['clangformat', 'astyle']
 let g:neoformat_enabled_cs = ['astyle']
 
 let g:neoformat_tex_latexindent = {
@@ -861,7 +858,7 @@ autocmd FileType c,cpp,java,php exe 'setl syntax=' . &filetype . '.doxygen'
 "关于DoxygenToolkit的设置
 let g:DoxygenToolkit_versionString = "1.0"
 let g:DoxygenToolkit_authorName = "Hulei"
-let g:DoxygenToolkit_licenseTag = "Copyright (C) " . strftime("%Y") . " Nationz Technologies Inc. All rights reserved."
+let g:DoxygenToolkit_licenseTag = "Copyright (c) " . strftime("%Y") . ", Nations Technologies Inc. All rights reserved."
 let g:DoxygenToolkit_maxFunctionProtoLines = 30
 
 
@@ -1012,7 +1009,7 @@ let g:Lf_WildIgnore = {
 let g:Lf_WorkingDirectoryMode = 'AF'
 let g:Lf_ShortcutF = ',ff'
 let g:Lf_ShortcutB = ',fb'
-let g:Lf_UseVersionControlTool = 0
+let g:Lf_UseVersionControlTool = 1
 let g:Lf_DefaultExternalTool = ""
 let g:Lf_PreviewCode = 1
 let g:Lf_FollowLinks = 1
