@@ -20,7 +20,7 @@ Plugin 'huleiak47/vim-RelatedFile'
 Plugin 'Align'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'scrooloose/nerdtree'
+"Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'netrw.vim'
 Plugin 'CmdlineComplete'
@@ -41,13 +41,18 @@ Plugin 'sbdchd/neoformat'
 Plugin 'Yggdroot/LeaderF'
 Plugin 'aklt/plantuml-syntax'
 Plugin 'pboettch/vim-cmake-syntax'
-Plugin 'richq/vim-cmake-completion'
+"Plugin 'richq/vim-cmake-completion'
 Plugin 'cespare/vim-toml'
+Plugin 'luochen1990/rainbow'
+Plugin 'gabrielelana/vim-markdown'
+Plugin 'Shougo/unite.vim'
+Plugin 'Shougo/vimfiler.vim'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Tagbar'
-Plugin 'Valloric/YouCompleteMe'
+Plugin 'huleiak47/YouCompleteMe'
+Plugin 'huleiak47/vim-cmake-complete'
 endif
 
 " --------------------------------------------------------
@@ -194,8 +199,8 @@ let g:ycm_key_list_previous_completion = ['<Up>']
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_max_diagnostics_to_display = 0
 if g:isWin
-    let g:ycm_python_binary_path = $PYTHON_HOME . '\\python.exe'
-    let g:ycm_server_python_interpreter = $PYTHON_HOME . '\\python.exe'
+    let g:ycm_python_binary_path = 'C:\\Python37\\python.exe'
+    let g:ycm_server_python_interpreter = 'C:\\Python37\\python.exe'
 endif
 let g:ycm_semantic_triggers = {
     \ 'c,cpp,python,java,cs,javascript': ['re!\w{2}'],
@@ -394,8 +399,8 @@ function! CallNERDTree()
 endfunction
 nnoremap <silent> ,dd :call CallNERDTree()<CR>
 
-nnoremap <silent> <F2> :NERDTreeToggle<CR><C-W>l
-nnoremap <silent> <C-F2> :NERDTree<CR><C-W>l
+let g:vimfiler_as_default_explorer = 1
+nnoremap <silent> <F2> :VimFilerExplorer<CR><C-W>l
 
 function! QuickFixWindowToggle()
     if len(filter(range(1, winnr('$')), 'getwinvar(v:val, "&ft") == "qf"'))
@@ -1073,3 +1078,8 @@ let g:NERDCustomDelimiters = {
     \ 'autohotkey': { 'left': ';'},
 \ }
 
+" rainbow
+let g:rainbow_active = 1
+
+" vim-markdown
+let g:markdown_enable_spell_checking = 0
