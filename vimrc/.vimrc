@@ -31,8 +31,6 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'mattn/emmet-vim'
 Plugin 'xptemplate'
-"Plugin 'vim-pandoc/vim-pandoc'
-"Plugin 'vim-pandoc/vim-pandoc-syntax'
 Plugin 'huleiak47/vim-AHKcomplete'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'w0rp/ale'
@@ -41,7 +39,6 @@ Plugin 'sbdchd/neoformat'
 Plugin 'Yggdroot/LeaderF'
 Plugin 'aklt/plantuml-syntax'
 Plugin 'pboettch/vim-cmake-syntax'
-"Plugin 'richq/vim-cmake-completion'
 Plugin 'cespare/vim-toml'
 Plugin 'luochen1990/rainbow'
 Plugin 'gabrielelana/vim-markdown'
@@ -51,7 +48,7 @@ Plugin 'Shougo/vimfiler.vim'
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Tagbar'
-Plugin 'huleiak47/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'huleiak47/vim-cmake-complete'
 endif
 
@@ -316,7 +313,7 @@ endif
 
 "tagbar setting
 let g:tagbar_ctags_bin = 'ctags'
-let g:tagbar_left = 1
+let g:tagbar_left = 0
 let g:tagbar_width = 45
 let g:tagbar_expand = 0
 let g:tagbar_show_linenumbers = -1
@@ -400,7 +397,7 @@ endfunction
 nnoremap <silent> ,dd :call CallNERDTree()<CR>
 
 let g:vimfiler_as_default_explorer = 1
-nnoremap <silent> <F2> :VimFilerExplorer<CR><C-W>l
+nnoremap <silent> <F2> :VimFilerExplorer -winwidth=45<CR><C-W>l
 
 function! QuickFixWindowToggle()
     if len(filter(range(1, winnr('$')), 'getwinvar(v:val, "&ft") == "qf"'))
@@ -682,18 +679,16 @@ nnoremap <silent> ,,I :call CScopeFind("i")<CR>
 nnoremap <silent> ,,T :call CScopeFind("t")<CR>
 nnoremap <silent> ,,F :call CScopeFind("f")<CR>
 
-
 "在窗口间移动
-let C_Ctrl_j='off' "关闭c.vim中的CTRL-J映射
-nnoremap <silent> <C-H> <C-W>h
-nnoremap <silent> <C-J> <C-W>j
-nnoremap <silent> <C-K> <C-W>k
-nnoremap <silent> <C-L> <C-W>l
-nnoremap <silent> <M-UP> <C-W>+
-nnoremap <silent> <M-DOWN> <C-W>-
-nnoremap <silent> <M-LEFT> <C-W><
-nnoremap <silent> <M-RIGHT> <C-W>>
-
+"let C_Ctrl_j='off' "关闭c.vim中的CTRL-J映射
+"nnoremap <silent> <C-H> <C-W>h
+"nnoremap <silent> <C-J> <C-W>j
+"nnoremap <silent> <C-K> <C-W>k
+"nnoremap <silent> <C-L> <C-W>l
+"nnoremap <silent> <M-UP> <C-W>+
+"nnoremap <silent> <M-DOWN> <C-W>-
+"nnoremap <silent> <M-LEFT> <C-W><
+"nnoremap <silent> <M-RIGHT> <C-W>>
 
 "上下移动行
 nnoremap <silent> <C-UP>  mz:m-2<cr>`z==
@@ -1014,7 +1009,7 @@ let g:Lf_WildIgnore = {
 let g:Lf_WorkingDirectoryMode = 'AF'
 let g:Lf_ShortcutF = ',ff'
 let g:Lf_ShortcutB = ',fb'
-let g:Lf_UseVersionControlTool = 1
+let g:Lf_UseVersionControlTool = 0
 let g:Lf_DefaultExternalTool = ""
 let g:Lf_PreviewCode = 1
 let g:Lf_FollowLinks = 1
