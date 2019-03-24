@@ -384,6 +384,8 @@ nnoremap <silent> ,/ :let @/=""<CR>
 
 nnoremap <silent> ,bb :BufExplorer<CR>
 
+nnoremap <silent> <Tab> <C-W>W
+
 "打开NERDTree并且定位到当前文件
 function! CallNERDTree()
     let temp = @/
@@ -412,8 +414,8 @@ nnoremap <silent> ,qf :call QuickFixWindowToggle()<CR>
 
 nnoremap <silent> <F7> :VPMakeProject<CR>
 nnoremap <silent> ,pmk :VPMakeProject<CR>
-nnoremap <silent> <C-F7> :VPMakeThisFile<CR>
-nnoremap <silent> ,pmf :VPMakeThisFile<CR>
+nnoremap <silent> <C-F7> :VPRebuildProject<CR>
+nnoremap <silent> ,prb :VPRebuildProject<CR>
 
 function! MakeProjectArgs()
     let pattern = input('VPMakeProject ')
@@ -433,8 +435,6 @@ nnoremap <silent> ,pup :VPUpdateTags<CR>
 nnoremap <silent> <F5> :VPRunExecution<CR>
 nnoremap <silent> ,pex :VPRunExecution<CR>
 
-nnoremap <silent> <F12> :VPSearchProject<CR>
-nnoremap <silent> ,psp :VPSearchProject<CR>
 nnoremap <silent> <C-F12> :VPEditProject<CR>
 nnoremap <silent> ,pep :VPEditProject<CR>
 nnoremap <silent> <S-F12> :VPSelectHistProject<CR>
@@ -1009,7 +1009,7 @@ let g:Lf_WildIgnore = {
 let g:Lf_WorkingDirectoryMode = 'AF'
 let g:Lf_ShortcutF = ',ff'
 let g:Lf_ShortcutB = ',fb'
-let g:Lf_UseVersionControlTool = 0
+let g:Lf_UseVersionControlTool = 1
 let g:Lf_DefaultExternalTool = ""
 let g:Lf_PreviewCode = 1
 let g:Lf_FollowLinks = 1
@@ -1071,6 +1071,7 @@ let g:NERDCustomDelimiters = {
     \ 'java': { 'left': '//'},
     \ 'vimproj': { 'left': '#'},
     \ 'autohotkey': { 'left': ';'},
+    \ 'dosbatch': {'left': '::', 'leftAlt': 'REM'},
 \ }
 
 " rainbow
