@@ -384,7 +384,7 @@ nnoremap <silent> ,/ :let @/=""<CR>
 
 nnoremap <silent> ,bb :BufExplorer<CR>
 
-nnoremap <silent> <Tab> <C-W>W
+"nnoremap <silent> <Space> <C-W>W
 
 "打开NERDTree并且定位到当前文件
 function! CallNERDTree()
@@ -405,7 +405,7 @@ function! QuickFixWindowToggle()
     if len(filter(range(1, winnr('$')), 'getwinvar(v:val, "&ft") == "qf"'))
         execute "cclose"
     else
-        execute "botright copen 15"
+        execute "botright copen 10"
         wincmd p
     endif
 endfunction
@@ -645,7 +645,7 @@ function! CScopeFindWord(type)
         let word = expand("<cword>")
     endif
     if word != ""
-        execute "copen 15"
+        execute "copen 10"
         wincmd p
         execute "silent cs find " . a:type . " " . word
     endif
@@ -664,7 +664,7 @@ function! CScopeFind(type)
     let cmd = "silent cs find " . a:type . " "
     let symbol = input(cmd . ":")
     if symbol != ""
-        execute "copen 15"
+        execute "copen 10"
         wincmd p
         execute cmd . symbol
     endif
@@ -729,7 +729,7 @@ nnoremap <silent> p p`]
 " 通过 12<Space> 跳转到第 12 行
 " 按 <Space> 跳到行文件末尾。
 " 按 <Backspace> 回到文件开始。
-nnoremap <Space> G
+"nnoremap <Space> G
 nnoremap <BS> gg
 
 inoremap <silent> <C-BS> <C-W>
@@ -918,50 +918,12 @@ let g:xptemplate_highlight = 'following,next'
 "in python file do not map ' and "
 "autocmd FileType python,vimproj silent! inoremap <buffer> <silent> ' '| silent! inoremap <buffer> <silent> " "
 
-
-python3 << EOF
-import os
-def save_colorscheme():
-    if int(vim.eval("g:isGUI")):
-        with open(vim.eval("$HOME") + "/.colorscheme", "w") as f:
-            f.write("colorscheme " + vim.eval("g:colors_name") + "\n" + "set background=" + vim.eval("&background"))
-
-if int(vim.eval("g:isGUI")):
-    if os.path.isfile(vim.eval("$HOME") + "/.colorscheme"):
-        vim.command("so $HOME/.colorscheme")
-    else:
-        vim.command("colorscheme molokai")
-        vim.command("set background=dark")
-
-EOF
-
-autocmd ColorScheme * python3 save_colorscheme()
-
 "airline
 let g:airline#extensions#tagbar#enabled = 0
 "let g:airline_theme = &background
 let g:airline#extensions#ycm#enabled = 1
 "let g:airline#extensions#ycm#error_symbol = 'E:'
 "let g:airline#extensions#ycm#warning_symbol = 'W:'
-
-"if !exists('g:airline_symbols')
-"let g:airline_symbols = {}
-"endif
-
-" unicode symbols
-" due to font sarasa, belows are not needed
-"let g:airline_left_sep = ''
-"let g:airline_right_sep = ''
-"let g:airline_symbols.crypt = ''
-"let g:airline_symbols.linenr = ''
-"let g:airline_symbols.maxlinenr = ''
-"let g:airline_symbols.branch = 'B'
-"let g:airline_symbols.paste = ''
-"let g:airline_symbols.spell = ''
-"let g:airline_symbols.notexists = ''
-"let g:airline_symbols.whitespace = ''
-"let g:airline_symbols.readonly = 'RO'
-"let g:airline_section_z = "[%l:%v:%p%%:%o]"
 
 if !g:isGUI
     let g:indentLine_loaded = 1
@@ -1000,18 +962,13 @@ autocmd FileType pandoc setl iskeyword=@,48-57,_,128-167,224-235
 set suffixes=.bak,~,.o,.info,.swp,.tmp,.obj,.pdb,.class,.pyc,.pyo,.pyd,.lst,.s90,.r90,.gcno,.aux,.bbl,.blg,.glg,.glo,.gls,.ist,.out,.toc,.xdv,.lib,.a,.suo,.sdf,.bin,.exe,.dll,.sbr,.cap,.dblite,.zip,.rar,.7z,.tar,.gz,.jar,.ilk,.exp,.so
 
 "LeaderF
-let g:Lf_RootMarkers = ['.git', '.hg', '.svn', '.vprj', '.vscode', '.project']
-let g:Lf_WildIgnore = {
-        \ 'dir': ['.*', '__pycache__'],
-        \ 'file': map(split(&suffixes, ','), '"*" . v:val')
-        \}
-
+let g:Lf_RootMarkers = ['.leaderfignore', '.git', '.hg', '.svn', '.vprj', '.vscode', '.project']
 let g:Lf_WorkingDirectoryMode = 'AF'
 let g:Lf_ShortcutF = ',ff'
 let g:Lf_ShortcutB = ',fb'
-let g:Lf_UseVersionControlTool = 1
+let g:Lf_UseVersionControlTool = 0
 let g:Lf_DefaultExternalTool = ""
-let g:Lf_PreviewCode = 1
+let g:Lf_PreviewCode = 0
 let g:Lf_FollowLinks = 1
 let g:Lf_WindowPosition = 'top'
 
@@ -1025,6 +982,8 @@ nnoremap <M-o> :LeaderfBufTag<CR>
 nnoremap ,fo :LeaderfBufTag<CR>
 nnoremap <M-O> :LeaderfTag<CR>
 nnoremap ,ft :LeaderfTag<CR>
+nnoremap <M-u> :LeaderfFunction<CR>
+nnoremap ,fu :LeaderfFunction<CR>
 
 " jts file
 au BufReadPost *.jts setf pascal
@@ -1079,3 +1038,7 @@ let g:rainbow_active = 1
 
 " vim-markdown
 let g:markdown_enable_spell_checking = 0
+
+" load some extra initialization code
+let $extra_init = $HOME . "/.vimplugins/vim-myplugins-hl/vimrc/extra_init.vim"
+source $extra_init
