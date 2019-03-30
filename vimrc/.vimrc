@@ -1,8 +1,9 @@
 set nocompatible
 filetype off
 
-let g:isWin=(has("win32") || has("win64") || has("win32unix"))
-let g:isGUI=has("gui_running")
+let g:isWin = (has("win32") || has("win64") || has("win32unix"))
+let g:isGUI = has("gui_running")
+let g:isWSL = filereadable('/mnt/c/Windows/System32/notepad.exe')
 let $vimrc = $HOME . "/.vimrc"
 
 " vundle plugins
@@ -48,7 +49,9 @@ Plugin 'Shougo/vimfiler.vim'
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Tagbar'
+if !g:isWSL
 Plugin 'Valloric/YouCompleteMe'
+endif
 Plugin 'huleiak47/vim-cmake-complete'
 endif
 
@@ -720,6 +723,32 @@ inoremap <silent> <C-a> <C-O>gg<C-O><S-V>G
 vnoremap <silent> <C-a> <ESC>gg<S-V>G
 nnoremap <silent> <C-a> <ESC>gg<S-V>G
 cmap <C-v> <C-R>+
+
+" WSL clipboard
+if g:isWSL
+    let s:clip = '/mnt/c/Windows/System32/clip.exe'
+    func! WriteToClipboard(reg)
+        call system('echo -n '.shellescape(getreg(a:reg)).' | '.s:clip)
+    endfunc
+
+    func! GetClipboard()
+        let ret = system('/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command Get-Clipboard')
+        return ret[:-3]
+    endfunc
+
+    vnoremap <silent> ,yy y:call WriteToClipboard('0')<CR>
+    vnoremap <silent> <C-c> y:call WriteToClipboard('0')<CR>
+    nnoremap <silent> ,yy Y:call WriteToClipboard('0')<CR>
+
+    nnoremap <silent> ,pp :r !/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command Get-Clipboard<CR>
+    vnoremap <silent> ,pp xh:r !/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command Get-Clipboard<CR>
+    vnoremap <silent> <C-v> xh:r !/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command Get-Clipboard<CR>
+    vnoremap <silent> ,xx x:call WriteToClipboard('"')<CR>
+    vnoremap <silent> <C-x> x:call WriteToClipboard('"')<CR>
+    inoremap <silent> <C-v> <ESC>:r !/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command Get-Clipboard<CR>i
+
+    cmap <C-v> <C-r>=GetClipboard()<CR>
+endif
 
 " 使用 ppppp 进行多行多次粘贴操作
 vnoremap <silent> y y`]

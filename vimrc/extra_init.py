@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 import vim
 
-
 def find_ignore_file():
     FILES = ('.leaderfignore', '.gitignore', '.hgignore')
     cwd = Path(os.getcwd()).absolute()
@@ -47,16 +46,19 @@ def leaderf_ignore_init():
     dirs, files = parse_ignore_file(ignore_file)
     dirs.extend(['.git', '.svn', '.hg', '__pycache__'])
 
-    COMMAND = r'''let g:Lf_WildIgnore = {'dir': %s, 'file': %s}''' % (str(dirs), str(files))
+    COMMAND = r'''let g:Lf_WildIgnore = {'dir': %s, 'file': %s}''' % (
+        str(dirs), str(files))
     vim.command(COMMAND)
+
 
 leaderf_ignore_init()
 
 
 def save_colorscheme():
-    if int(vim.eval("g:isGUI")):
-        with open(vim.eval("$HOME") + "/.colorscheme", "w") as f:
-            f.write("colorscheme " + vim.eval("g:colors_name") + "\n" + "set background=" + vim.eval("&background"))
+    with open(vim.eval("$HOME") + "/.colorscheme", "w") as f:
+        f.write("colorscheme " + vim.eval("g:colors_name") + "\n" +
+                "set background=" + vim.eval("&background"))
+
 
 def init_colorscheme():
     if os.path.isfile(vim.eval("$HOME") + "/.colorscheme"):
@@ -67,5 +69,5 @@ def init_colorscheme():
 
     vim.command("autocmd ColorScheme * python3 save_colorscheme()")
 
-init_colorscheme()
 
+init_colorscheme()
