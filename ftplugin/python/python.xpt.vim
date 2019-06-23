@@ -1,18 +1,5 @@
 XPTemplate priority=personal
 
-XPT docf    hint=docuemnt\ file
-XSET author=$author
-XSET date=date()
-#!/usr/bin/env python
-# -*- coding:`Echo(&fenc)^ -*-
-ur'''
-@brief `^
-@file `file()^
-@copyright (c) `strftime("%Y")^, `Nations Technologies Inc^. All rights reserved.
-'''
-
-..XPT
-
 XPT ""
 """
 `cursor^
@@ -25,10 +12,13 @@ XPT ''
 
 
 XPT #!
-#!/usr/bin/env python
-# -*- coding:`Echo(&fenc)^ -*-
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+"""
+`^
+"""
 
-`cursor^
+`^
 
 XPT funicode
 from __future__ import unicode_literals

@@ -26,9 +26,16 @@ XPT temp
 ## command will be execute.
 # MAKE = 'make'
 
+## use REBUILD to set command line for making project. When you press <C-F7>, make
+## command will be execute.
+# REBUILD = 'rm -r build && make'
+
+## The path to execute MAKE or REBUILD command and the path to load build result log
+# BUILDPATH = '.'
+
 ## use COMPILER to set errorformat of vim. Now you can choose one or more in
-## 'common', 'msvc', 'gcc', 'mdk', 'ads', 'avr', 'javac', 'pclint', 'scons'
-## 'pylint', 'yacc', 'lex'.
+## 'common', 'msvc', 'gcc', 'mdk', 'armcc5', 'ads', 'avr', 'javac', 'pclint',
+## 'scons', 'pylint', 'yacc', 'lex'.
 # COMPILER = ['common']
 
 ## use EXECUTE to set command line for dest file. When you press <F5>, the

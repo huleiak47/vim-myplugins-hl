@@ -402,6 +402,7 @@ endfunction
 nnoremap <silent> ,dd :call CallNERDTree()<CR>
 
 let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_safe_mode_by_default = 0
 nnoremap <silent> <F2> :VimFilerExplorer -winwidth=45<CR><C-W>l
 
 function! QuickFixWindowToggle()
@@ -500,7 +501,7 @@ let g:neoformat_java_clangformat = g:neoformat_c_clangformat
 
 let g:neoformat_enabled_c = ['clangformat', 'astyle']
 let g:neoformat_enabled_cpp = ['clangformat', 'astyle']
-let g:neoformat_enabled_java = ['clangformat', 'astyle']
+let g:neoformat_enabled_java = ['astyle']
 let g:neoformat_enabled_cs = ['astyle']
 
 let g:neoformat_tex_latexindent = {
@@ -732,8 +733,7 @@ if g:isWSL
     endfunc
 
     func! GetClipboard()
-        let ret = system('/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command Get-Clipboard')
-        return ret[:-3]
+        return trim(system('/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command Get-Clipboard'))
     endfunc
 
     vnoremap <silent> ,yy y:call WriteToClipboard('0')<CR>
