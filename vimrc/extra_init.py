@@ -6,17 +6,31 @@ import sys
 from pathlib import Path
 import vim
 
-def find_ignore_file():
-    FILES = ('.leaderfignore', '.gitignore', '.hgignore')
+
+def find_file(names):
     cwd = Path(os.getcwd()).absolute()
     while 1:
-        for file in FILES:
+        for file in names:
             p = cwd / file
             if p.is_file():
                 return p
         if cwd.parent == cwd:
             return None
         cwd = cwd.parent
+
+
+def vim_init():
+    viminit_file = find_file(['.viminit'])
+    if viminit_file:
+        vim.command(f'so {viminit_file}')
+
+vim.command("autocmd BufRead .viminit set ft=vim")
+vim_init()
+
+
+def find_ignore_file():
+    FILES = ('.leaderfignore', '.gitignore', '.hgignore')
+    return find_file(FILES)
 
 
 def parse_ignore_file(fname):

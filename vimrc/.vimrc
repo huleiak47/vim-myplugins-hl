@@ -18,7 +18,8 @@ Plugin 'gmarik/vundle'
 
 Plugin 'huleiak47/vim-myplugins-hl'
 Plugin 'huleiak47/vim-RelatedFile'
-Plugin 'Align'
+"Plugin 'Align'
+Plugin 'junegunn/vim-easy-align'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 "Plugin 'scrooloose/nerdtree'
@@ -35,7 +36,7 @@ Plugin 'xptemplate'
 Plugin 'huleiak47/vim-AHKcomplete'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'w0rp/ale'
-Plugin 'huleiak47/onedark.vim'
+Plugin 'morhetz/gruvbox'
 Plugin 'sbdchd/neoformat'
 Plugin 'Yggdroot/LeaderF'
 Plugin 'aklt/plantuml-syntax'
@@ -157,7 +158,7 @@ set norelativenumber
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-"autocmd FileType tex setl tabstop=2 | setl softtabstop=2 | setl shiftwidth=2
+autocmd FileType cmake setl tabstop=2 | setl softtabstop=2 | setl shiftwidth=2
 set smarttab
 set autoindent
 autocmd FileType c,cpp,java,cs,javascript,php setl smartindent cindent
@@ -483,7 +484,7 @@ vnoremap <silent> ,fm :Neoformat &ft<CR>
 "
 let g:neoformat_c_astyle = {
             \ 'exe': 'astyle',
-            \ 'args': ['--style=allman', '--indent=spaces=4', '--align-pointer=type', '--align-reference=type', '--indent-cases', '--indent-preproc-define', '--indent-col1-comments', '--pad-oper', '--pad-header', '--unpad-paren', '--add-brackets', '--convert-tabs', '--mode=c', '-z2', '-n'],
+            \ 'args': [],
             \ 'stdin': 1,
             \ }
 
@@ -499,8 +500,8 @@ let g:neoformat_cs_astyle = g:neoformat_c_astyle
 let g:neoformat_cpp_clangformat = g:neoformat_c_clangformat
 let g:neoformat_java_clangformat = g:neoformat_c_clangformat
 
-let g:neoformat_enabled_c = ['clangformat', 'astyle']
-let g:neoformat_enabled_cpp = ['clangformat', 'astyle']
+let g:neoformat_enabled_c = ['astyle']
+let g:neoformat_enabled_cpp = ['astyle']
 let g:neoformat_enabled_java = ['astyle']
 let g:neoformat_enabled_cs = ['astyle']
 
@@ -939,7 +940,7 @@ let g:Align_xstrlen=3
 let loaded_snips=1
 
 " map = to align =
-vnoremap = :Align =<CR>gv<ESC>
+vnoremap = :EasyAlign =<CR>
 
 "xptemplate
 let g:xptemplate_brace_complete = 0
