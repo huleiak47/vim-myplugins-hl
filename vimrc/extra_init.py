@@ -3,6 +3,7 @@
 
 import os
 import sys
+import time
 from pathlib import Path
 import vim
 
@@ -24,6 +25,8 @@ def vim_init():
     if viminit_file:
         vim.command(f'so {viminit_file}')
 
+
+# load .viminit in current dir or parent dir when vim startup
 vim.command("autocmd BufRead .viminit set ft=vim")
 vim_init()
 
@@ -65,13 +68,13 @@ def leaderf_ignore_init():
     vim.command(COMMAND)
 
 
+# parse '.leaderfignore', '.gitignore', '.hgignore' in current dir or parent dir when vim startup
 leaderf_ignore_init()
 
 
 def save_colorscheme():
     with open(vim.eval("$HOME") + "/.colorscheme", "w") as f:
-        f.write("colorscheme " + vim.eval("g:colors_name") + "\n" +
-                "set background=" + vim.eval("&background"))
+        f.write("colorscheme " + vim.eval("g:colors_name") + "\n")
 
 
 def init_colorscheme():
@@ -79,9 +82,24 @@ def init_colorscheme():
         vim.command("source $HOME/.colorscheme")
     else:
         vim.command("colorscheme molokai")
-        vim.command("set background=dark")
 
     vim.command("autocmd ColorScheme * python3 save_colorscheme()")
 
 
+# load colorscheme when startup, and save colorscheme when exit
 init_colorscheme()
+
+def switch_background():
+    t = time.localtime()
+    bg = vim.eval('&bg')
+    if t.tm_hour >= 18 or t.tm_hour < 7:
+        bg = 'dark'
+    else:
+        bg = 'light'
+
+    if bg != vim.eval('&bg'):
+        vim.command(f'set bg={bg}')
+
+
+# switch background when startup
+switch_background()

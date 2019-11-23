@@ -294,6 +294,8 @@ autocmd FileType make,tags setl noexpandtab
 set foldmethod=indent
 set winfixheight
 
+" disable cursor blink
+set guicursor+=a:blinkon0
 " -------------------------------
 
 " When editing a file, always jump to the last known cursor position.
@@ -500,10 +502,10 @@ let g:neoformat_cs_astyle = g:neoformat_c_astyle
 let g:neoformat_cpp_clangformat = g:neoformat_c_clangformat
 let g:neoformat_java_clangformat = g:neoformat_c_clangformat
 
-let g:neoformat_enabled_c = ['astyle']
-let g:neoformat_enabled_cpp = ['astyle']
-let g:neoformat_enabled_java = ['astyle']
-let g:neoformat_enabled_cs = ['astyle']
+let g:neoformat_enabled_c = ['clangformat', 'astyle']
+let g:neoformat_enabled_cpp = ['clangformat', 'astyle']
+let g:neoformat_enabled_java = ['clangformat', 'astyle']
+let g:neoformat_enabled_cs = ['clangformat', 'astyle']
 
 let g:neoformat_tex_latexindent = {
         \ 'exe': 'latexindent',
@@ -925,8 +927,8 @@ let g:python_highlight_all=1
 let g:python_version_2=0
 
 "delimitMate settings
-let delimitMate_matchpairs = "(:),[:],{:}"
-autocmd FileType xml,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
+let delimitMate_matchpairs = "(:),[:],{:},（:）"
+autocmd FileType xml,html let b:delimitMate_matchpairs = "(:),[:],{:},（:）"
 autocmd FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
 "autocmd FileType tex let b:delimitMate_quotes = ""
 let delimitMate_autoclose = 1
