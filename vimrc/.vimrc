@@ -52,6 +52,7 @@ Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Tagbar'
 if !g:isWSL
 Plugin 'Valloric/YouCompleteMe'
+"Plugin 'neoclide/coc.nvim'
 endif
 Plugin 'huleiak47/vim-cmake-complete'
 endif
@@ -200,12 +201,25 @@ let g:ycm_key_list_previous_completion = ['<Up>']
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_max_diagnostics_to_display = 0
 if g:isWin
-    let g:ycm_python_binary_path = 'C:\\Python37\\python.exe'
-    let g:ycm_server_python_interpreter = 'C:\\Python37\\python.exe'
+    let g:ycm_python_binary_path = 'C:\\Program Files\\Python38\\python.exe'
+    let g:ycm_server_python_interpreter = 'C:\\Program Files\\Python38\\python.exe'
 endif
 let g:ycm_semantic_triggers = {
     \ 'c,cpp,python,java,cs,javascript': ['re!\w{2}'],
     \}
+
+let g:ycm_filetype_blacklist = {
+        \ 'tagbar': 1,
+        \ 'notes': 1,
+        \ 'markdown': 1,
+        \ 'netrw': 1,
+        \ 'unite': 1,
+        \ 'text': 1,
+        \ 'vimwiki': 1,
+        \ 'pandoc': 1,
+        \ 'infolog': 1,
+        \ 'mail': 1
+        \}
 
 set vb t_vb=
 autocmd GUIEnter * set vb t_vb=
@@ -294,8 +308,6 @@ autocmd FileType make,tags setl noexpandtab
 set foldmethod=indent
 set winfixheight
 
-" disable cursor blink
-set guicursor+=a:blinkon0
 " -------------------------------
 
 " When editing a file, always jump to the last known cursor position.
@@ -899,7 +911,7 @@ autocmd FileType javascript setl omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html setl omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setl omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml setl omnifunc=xmlcomplete#CompleteTags
-autocmd FileType python,java setl omnifunc=youcompleteme#CompleteFunc
+"autocmd FileType python,java setl omnifunc=youcompleteme#CompleteFunc
 
 
 nnoremap <silent> <C-N> :silent cn<CR>
@@ -1071,6 +1083,23 @@ let g:rainbow_active = 1
 " vim-markdown
 let g:markdown_enable_spell_checking = 0
 
+function! ShowInPreview(lines)
+    let l:command = "silent! pedit! +setlocal\\ " .
+                  \ "buftype=nofile\\ nobuflisted\\ " .
+                  \ "noswapfile\\ nonumber\\ " .
+                  \ "filetype=" . " " . "Preview"
+
+    exe l:command
+
+    if has('nvim')
+        let l:bufNr = bufnr(a:name)
+        call nvim_buf_set_lines(l:bufNr, 0, -1, 0, a:lines)
+    else
+        call setbufline("Preview", 1, a:lines)
+    endif
+endfunction
+
 " load some extra initialization code
 let $extra_init = $HOME . "/.vimplugins/vim-myplugins-hl/vimrc/extra_init.vim"
 source $extra_init
+
