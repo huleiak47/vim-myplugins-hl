@@ -7,27 +7,27 @@ let g:isWSL = filereadable('/mnt/c/Windows/System32/notepad.exe')
 let $vimrc = $HOME . "/.vimrc"
 
 " vundle plugins
-execute 'set rtp+=' . $HOME . '/.vimplugins/vundle'
+execute 'set rtp+=' . $HOME . '/.vimplugins/Vundle'
 call vundle#rc($HOME . '/.vimplugins')
 
 
 "first time use git clone https://github.com/gmarik/vundle.git  ~/.vimplugins/vundle to get vundle
 "
 " Plugins
-Plugin 'gmarik/vundle'
+Plugin 'gmarik/Vundle'
 
 Plugin 'huleiak47/vim-myplugins-hl'
 Plugin 'huleiak47/vim-RelatedFile'
-"Plugin 'Align'
 Plugin 'junegunn/vim-easy-align'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-"Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'netrw.vim'
 Plugin 'CmdlineComplete'
 Plugin 'DoxygenToolkit.vim'
-Plugin 'Mark'
+"Plugin 'Mark'
+Plugin 'inkarkat/vim-ingo-library'
+Plugin 'inkarkat/vim-mark'
 Plugin 'Raimondi/delimitMate'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
@@ -46,13 +46,17 @@ Plugin 'luochen1990/rainbow'
 Plugin 'gabrielelana/vim-markdown'
 Plugin 'Shougo/unite.vim'
 Plugin 'Shougo/vimfiler.vim'
+Plugin 'ferrine/md-img-paste.vim'
+Plugin 'elzr/vim-json'
+Plugin 'gyim/vim-boxdraw'
+Plugin 'dstein64/vim-startuptime'
+Plugin 'dominikduda/vim_current_word'
 
 if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Tagbar'
 if !g:isWSL
 Plugin 'Valloric/YouCompleteMe'
-"Plugin 'neoclide/coc.nvim'
 endif
 Plugin 'huleiak47/vim-cmake-complete'
 endif
@@ -91,30 +95,21 @@ filetype indent on
 "==================================================================
 "通用的配置
 autocmd FileType dosbatch setl fileformat=dos | setl fenc=gbk
-autocmd FileType gitcommit,tex setl fenc=utf-8
-autocmd FileType python if &fenc == "ascii" | set fenc=utf-8 | endif
 if g:isWin
     "set shellslash
-    set fencs=ucs-bom,ascii,utf-8,gbk,big5,latin-1
+    set fencs=ucs-bom,utf-8,gbk,big5,latin-1
     if &fenc == "" && &modifiable
-        set fenc=ascii
+        set fenc=utf-8
     endif
     "set fileformats=dos,unix
     set fileformats=unix,dos
     if g:isGUI
         set encoding=utf-8
         set ambiwidth=double
-        set guifont=Sarasa_Term_SC:h10
-        set guifontwide=Sarasa_Term_SC:h10
-        "set guifont=Droid_Sans_Mono:h11
-        "set guifont=Courier_New:h10
-        "set guifont=Consolas:h11
-        "set guifontwide=SimHei:h12
+        set guifont=Sarasa_Mono_SC:h9.5
+        set guifontwide=Sarasa_Mono_SC:h9.5
         set linespace=1
         set cursorline "高亮当前行
-        "source $VIMRUNTIME/delmenu.vim
-        "source $VIMRUNTIME/menu.vim
-        "language messages zh_CN.utf-8
         language messages en_US.utf-8
     else
         language messages en_US.utf-8
@@ -149,8 +144,13 @@ if g:isGUI && !exists("s:has_inited")
     set lines=40 columns=160
 endif
 
-set rop=type:directx,gamma:2.0
-set textwidth=80
+if has("gui_running")
+    if has('win32') || has('win64')
+        set renderoptions=type:directx,level:0.75,gamma:2.0,contrast:0.25,geom:1,renmode:5,taamode:1
+    endif
+endif
+
+set textwidth=120
 set hidden
 set fdl=99
 set numberwidth=5
@@ -194,15 +194,20 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_disable_for_files_larger_than_kb = 10000
 let g:ycm_global_ycm_extra_conf = $HOME . '/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0
-let g:ycm_error_symbol = 'E>'
-let g:ycm_warning_symbol = 'W>'
+if g:isGUI
+    let g:ycm_error_symbol = '❌'
+    let g:ycm_warning_symbol = '✋'
+else
+    let g:ycm_error_symbol = 'E'
+    let g:ycm_warning_symbol = 'W'
+endif
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_max_diagnostics_to_display = 0
 if g:isWin
-    let g:ycm_python_binary_path = 'C:\\Program Files\\Python38\\python.exe'
-    let g:ycm_server_python_interpreter = 'C:\\Program Files\\Python38\\python.exe'
+    let g:ycm_python_binary_path = 'python.exe'
+    let g:ycm_server_python_interpreter = 'python.exe'
 endif
 let g:ycm_semantic_triggers = {
     \ 'c,cpp,python,java,cs,javascript': ['re!\w{2}'],
@@ -331,7 +336,7 @@ endif
 
 "tagbar setting
 let g:tagbar_ctags_bin = 'ctags'
-let g:tagbar_left = 0
+let g:tagbar_left = 1
 let g:tagbar_width = 45
 let g:tagbar_expand = 0
 let g:tagbar_show_linenumbers = -1
@@ -344,7 +349,7 @@ let g:tagbar_sort = 0
 
 
 nnoremap <silent> ,ot :TagbarToggle<CR>
-nnoremap <silent> <S-F2> :TagbarToggle<CR>
+nnoremap <silent> <F2> :TagbarToggle<CR>
 
 "CScope
 if has("cscope")
@@ -418,13 +423,13 @@ nnoremap <silent> ,dd :call CallNERDTree()<CR>
 
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_safe_mode_by_default = 0
-nnoremap <silent> <F2> :VimFilerExplorer -winwidth=45<CR><C-W>l
+nnoremap <silent> <S-F2> :VimFilerExplorer -winwidth=45<CR><C-W>l
 
 function! QuickFixWindowToggle()
     if len(filter(range(1, winnr('$')), 'getwinvar(v:val, "&ft") == "qf"'))
         execute "cclose"
     else
-        execute "botright copen 10"
+        execute "botright copen 15"
         wincmd p
     endif
 endfunction
@@ -481,9 +486,9 @@ def open_console():
         sp.Popen("start Console.exe -t cmdex", shell=1)
 
 PYTHON_CMD
-    noremap <silent> ,tt :python3 open_console()<CR>
+    noremap <silent> ,tt :py3 open_console()<CR>
 else
-    noremap <silent> ,tt :python3 import subprocess as sp; sp.Popen("gnome-terminal")<CR>
+    noremap <silent> ,tt :term<CR>
 endif
 
 noremap <silent> ,rc :e $vimrc<CR>
@@ -526,6 +531,8 @@ let g:neoformat_tex_latexindent = {
         \ 'replace': 1
         \}
 
+
+" doxygen
 nnoremap <silent> ,dx :Dox<CR>
 nnoremap <silent> ,doxl :DoxLic<CR>
 
@@ -664,7 +671,7 @@ function! CScopeFindWord(type)
         let word = expand("<cword>")
     endif
     if word != ""
-        execute "copen 10"
+        execute "copen 15"
         wincmd p
         execute "silent cs find " . a:type . " " . word
     endif
@@ -683,7 +690,7 @@ function! CScopeFind(type)
     let cmd = "silent cs find " . a:type . " "
     let symbol = input(cmd . ":")
     if symbol != ""
-        execute "copen 10"
+        execute "copen 15"
         wincmd p
         execute cmd . symbol
     endif
@@ -828,7 +835,7 @@ function! OnInit()
         wincmd =
         set colorcolumn=
     else
-        set colorcolumn=81,121
+        set colorcolumn=121
     endif
 endfunction
 
@@ -1036,13 +1043,23 @@ let g:pascal_delphi = 1
 
 " ale
 let g:ale_linters = {
-\   'python': ['pylint'],
+\   'python': ['flake8'],
 \   'vim': [],
 \   'c': [],
 \   'cpp': [],
 \   'java': [],
 \   'tex': [],
+\   'markdown': [],
 \}
+
+if g:isGUI
+    let g:ale_sign_error = '❌'
+    let g:ale_sign_warning = '✋'
+else
+    let g:ale_sign_error = 'E'
+    let g:ale_sign_warning = 'W'
+endif
+
 
 
 " latex for tagbar
@@ -1058,6 +1075,17 @@ let g:tagbar_type_tex = {
     \ 'sort'    : 0,
 \ }
 
+" markdown for tagbar
+let g:tagbar_type_markdown = {
+    \ 'ctagstype' : 'markdown',
+    \ 'kinds'     : [
+        \ 'c:chapters',
+        \ 's:sections',
+        \ 'S:subsections'
+    \ ],
+    \ 'sort'    : 0,
+\ }
+
 " comment selection
 vmap / <leader>cs
 " uncomment selection
@@ -1069,9 +1097,6 @@ nmap ? <leader>c<space>
 " nerd commenter
 let g:NERDCustomDelimiters = {
     \ 'apdu': { 'left': '//'},
-    \ 'c': { 'left': '//'},
-    \ 'cpp': { 'left': '//'},
-    \ 'java': { 'left': '//'},
     \ 'vimproj': { 'left': '#'},
     \ 'autohotkey': { 'left': ';'},
     \ 'dosbatch': {'left': '::', 'leftAlt': 'REM'},
@@ -1082,6 +1107,9 @@ let g:rainbow_active = 1
 
 " vim-markdown
 let g:markdown_enable_spell_checking = 0
+
+" gruvbox do not invert color in selection mode
+let g:gruvbox_invert_selection = 0
 
 function! ShowInPreview(lines)
     let l:command = "silent! pedit! +setlocal\\ " .
@@ -1099,7 +1127,52 @@ function! ShowInPreview(lines)
     endif
 endfunction
 
+" md-img-paste
+nmap ,pi :call mdip#MarkdownClipboardImage()<CR>
+let g:mdip_imgdir = '_images'
+
+python3 << PYTHON_CMD
+import re
+def change_font_size(is_inc):
+    step = 0.5
+    max_size = 50
+    min_size = 2
+    guifont = vim.eval("&guifont")
+    guifontwide = vim.eval("&guifontwide")
+    mobj1 = re.match("^(.*?)(\d+(?:.\d+)?)$", guifont)
+    mobj2 = re.match("^(.*?)(\d+(?:.\d+)?)$", guifontwide)
+    if not mobj1 or not mobj2:
+        return
+    font1 = mobj1.group(1)
+    font2 = mobj2.group(1)
+    size1 = float(mobj1.group(2))
+    size2 = float(mobj2.group(2))
+    new_size1, new_size2 = ((size + step) if is_inc else (size - step) for size in (size1, size2))
+    if not (min_size <= new_size1 <= max_size and min_size <= new_size2 <= max_size):
+        return
+    vim.command("set guifont=%s%s" % (font1, new_size1))
+    vim.command("set guifontwide=%s%s" % (font2, new_size2))
+
+PYTHON_CMD
+nnoremap <C-PageUp> :py3 change_font_size(is_inc=True)<CR>
+nnoremap <C-PageDown> :py3 change_font_size(is_inc=False)<CR>
+
+" settings for vim_current word
+let g:vim_current_word#highlight_delay = 300
+let g:vim_current_word#highlight_only_in_focused_window = 0
+let g:vim_current_word#highlight_twins = 1
+let g:vim_current_word#highlight_current_word = 1
+function! SetCurrentWord()
+    if &bg == "dark"
+        hi CurrentWordTwins guifg=NONE guibg=#006060 gui=NONE ctermfg=NONE ctermbg=237 cterm=NONE
+        hi CurrentWord      guifg=NONE guibg=#600060 gui=NONE ctermfg=NONE ctermbg=237 cterm=NONE
+    else
+        hi CurrentWordTwins guifg=NONE guibg=#C0F0F0 gui=NONE ctermfg=NONE ctermbg=237 cterm=NONE
+        hi CurrentWord      guifg=NONE guibg=#F0C0F0 gui=NONE ctermfg=NONE ctermbg=237 cterm=NONE
+    endif
+endfunction
+autocmd ColorScheme * call SetCurrentWord()
+
 " load some extra initialization code
 let $extra_init = $HOME . "/.vimplugins/vim-myplugins-hl/vimrc/extra_init.vim"
 source $extra_init
-
