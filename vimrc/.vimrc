@@ -16,27 +16,29 @@ call vundle#rc($HOME . '/.vimplugins')
 " Plugins
 Plugin 'gmarik/Vundle'
 
-Plugin 'huleiak47/vim-myplugins-hl'
-Plugin 'huleiak47/vim-RelatedFile'
-Plugin 'junegunn/vim-easy-align'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'morhetz/gruvbox'
+Plugin 'huleiak47/vim-myplugins-hl'
+Plugin 'xptemplate'
+Plugin 'dominikduda/vim_current_word'
+
+if &diff == 0
+Plugin 'huleiak47/vim-RelatedFile'
+Plugin 'junegunn/vim-easy-align'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'netrw.vim'
 Plugin 'CmdlineComplete'
 Plugin 'DoxygenToolkit.vim'
-"Plugin 'Mark'
 Plugin 'inkarkat/vim-ingo-library'
 Plugin 'inkarkat/vim-mark'
 Plugin 'Raimondi/delimitMate'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'mattn/emmet-vim'
-Plugin 'xptemplate'
 Plugin 'huleiak47/vim-AHKcomplete'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'w0rp/ale'
-Plugin 'morhetz/gruvbox'
 Plugin 'sbdchd/neoformat'
 Plugin 'Yggdroot/LeaderF'
 Plugin 'aklt/plantuml-syntax'
@@ -50,9 +52,7 @@ Plugin 'ferrine/md-img-paste.vim'
 Plugin 'elzr/vim-json'
 Plugin 'gyim/vim-boxdraw'
 Plugin 'dstein64/vim-startuptime'
-Plugin 'dominikduda/vim_current_word'
 
-if &diff == 0
 Plugin 'huleiak47/vim-SimpleIDE'
 Plugin 'Tagbar'
 if !g:isWSL
@@ -64,27 +64,6 @@ endif
 " --------------------------------------------------------
 
 let mapleader = "'"
-
-
-function! MyDiff()
-    let opt = '-a -d --binary '
-    if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-    if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-    let arg1 = v:fname_in
-    if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-    let arg2 = v:fname_new
-    if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-    let arg3 = v:fname_out
-    if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-    let eq = ''
-    if g:isWin
-        let cmd = 'diff.exe'
-    else
-        let cmd = 'diff'
-    endif
-    silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
-endfunction
-set diffexpr=MyDiff()
 
 syntax on
 
@@ -144,10 +123,8 @@ if g:isGUI && !exists("s:has_inited")
     set lines=40 columns=160
 endif
 
-if has("gui_running")
-    if has('win32') || has('win64')
-        set renderoptions=type:directx,level:0.75,gamma:2.0,contrast:0.25,geom:1,renmode:5,taamode:1
-    endif
+if g:isGUI && g:isWin
+    set renderoptions=type:directx,level:0.75,gamma:2.0,contrast:0.25,geom:1,renmode:5,taamode:1
 endif
 
 set textwidth=120
@@ -177,54 +154,7 @@ set autochdir
 set noerrorbells
 set sessionoptions=help,blank,buffers,options,folds,resize,winpos,winsize
 set completeopt=menuone,longest,preview
-
-" YouCompleteMe settings
-autocmd FileType c,cpp,python,java nnoremap <buffer> ,gf :YcmCompleter GoToDefinition<CR>
-autocmd FileType c,cpp,python,java nnoremap <buffer> ,gc :YcmCompleter GoToDeclaration<CR>
-autocmd FileType c,cpp,python,java nnoremap <buffer> ,gt :YcmCompleter GoTo<CR>
-autocmd FileType python,java nnoremap <buffer> <C-]> :YcmCompleter GoTo<CR>
-autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,gc :YcmCompleter GoToReferences<CR>
-autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,yc :YcmCompleter
-autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,yd :YcmDiags<CR>
-autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,yf :YcmCompleter FixIt<CR>
-let g:ycm_add_preview_to_completeopt=1
-let g:ycm_complete_in_comments = 0
-let g:ycm_complete_in_strings = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_disable_for_files_larger_than_kb = 10000
-let g:ycm_global_ycm_extra_conf = $HOME . '/.ycm_extra_conf.py'
-let g:ycm_confirm_extra_conf = 0
-if g:isGUI
-    let g:ycm_error_symbol = '❌'
-    let g:ycm_warning_symbol = '✋'
-else
-    let g:ycm_error_symbol = 'E'
-    let g:ycm_warning_symbol = 'W'
-endif
-let g:ycm_key_list_select_completion = ['<Down>']
-let g:ycm_key_list_previous_completion = ['<Up>']
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_max_diagnostics_to_display = 0
-if g:isWin
-    let g:ycm_python_binary_path = 'python.exe'
-    let g:ycm_server_python_interpreter = 'python.exe'
-endif
-let g:ycm_semantic_triggers = {
-    \ 'c,cpp,python,java,cs,javascript': ['re!\w{2}'],
-    \}
-
-let g:ycm_filetype_blacklist = {
-        \ 'tagbar': 1,
-        \ 'notes': 1,
-        \ 'markdown': 1,
-        \ 'netrw': 1,
-        \ 'unite': 1,
-        \ 'text': 1,
-        \ 'vimwiki': 1,
-        \ 'pandoc': 1,
-        \ 'infolog': 1,
-        \ 'mail': 1
-        \}
+set colorcolumn=121
 
 set vb t_vb=
 autocmd GUIEnter * set vb t_vb=
@@ -307,7 +237,7 @@ set hlsearch
 
 set expandtab
 
-set diffopt=filler,vertical
+set diffopt+=internal,indent-heuristic,algorithm:histogram
 
 autocmd FileType make,tags setl noexpandtab
 set foldmethod=indent
@@ -333,6 +263,55 @@ if !exists(":DiffOrig")
         \ | wincmd p | diffthis
 endif
 
+
+" YouCompleteMe settings
+autocmd FileType c,cpp,python,java nnoremap <buffer> ,gf :YcmCompleter GoToDefinition<CR>
+autocmd FileType c,cpp,python,java nnoremap <buffer> ,gc :YcmCompleter GoToDeclaration<CR>
+autocmd FileType c,cpp,python,java nnoremap <buffer> ,gt :YcmCompleter GoTo<CR>
+autocmd FileType python,java nnoremap <buffer> <C-]> :YcmCompleter GoTo<CR>
+autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,gc :YcmCompleter GoToReferences<CR>
+autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,yc :YcmCompleter
+autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,yd :YcmDiags<CR>
+autocmd FileType c,cpp,python,cs,javascript,rust,go,java nnoremap <buffer> ,yf :YcmCompleter FixIt<CR>
+let g:ycm_add_preview_to_completeopt=1
+let g:ycm_complete_in_comments = 0
+let g:ycm_complete_in_strings = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_disable_for_files_larger_than_kb = 10000
+let g:ycm_global_ycm_extra_conf = $HOME . '/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 0
+if g:isGUI
+    let g:ycm_error_symbol = '❌'
+    let g:ycm_warning_symbol = '✋'
+else
+    let g:ycm_error_symbol = 'E'
+    let g:ycm_warning_symbol = 'W'
+endif
+let g:ycm_key_list_select_completion = ['<Down>']
+let g:ycm_key_list_previous_completion = ['<Up>']
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_max_diagnostics_to_display = 0
+if g:isWin
+    let g:ycm_python_binary_path = 'python.exe'
+    let g:ycm_server_python_interpreter = 'python.exe'
+endif
+let g:ycm_semantic_triggers = {
+    \ 'c,cpp,python,java,cs,javascript': ['re!\w{2}'],
+    \}
+
+let g:ycm_filetype_blacklist = {
+        \ 'tagbar': 1,
+        \ 'notes': 1,
+        \ 'markdown': 1,
+        \ 'netrw': 1,
+        \ 'unite': 1,
+        \ 'text': 1,
+        \ 'vimwiki': 1,
+        \ 'pandoc': 1,
+        \ 'infolog': 1,
+        \ 'mail': 1
+        \}
+" ycm end
 
 "tagbar setting
 let g:tagbar_ctags_bin = 'ctags'
@@ -814,15 +793,6 @@ else
     nnoremap <silent> ,yp :let @+ = expand("%:p")<CR>
 endif
 
-function! MaxWinAndSplit()
-    set lines=999 columns=999
-    wincmd =
-endfunction
-
-function! RestoreWinAndSplit()
-    set lines=40 columns=120
-endfunction
-
 function! OnDiffMode()
     set wrap
     let g:my_wrap_mode = 1
@@ -830,22 +800,8 @@ function! OnDiffMode()
     let g:my_list_mode = 1
 endfunction
 
-function! OnInit()
-    if &diff
-        wincmd =
-        set colorcolumn=
-    else
-        set colorcolumn=121
-    endif
-endfunction
-
-if &diff
-    set lines=999 columns=999
-endif
-autocmd VIMEnter * call OnInit()
+autocmd GUIEnter * if &diff | simalt ~x | endif
 autocmd FilterWritePost * if &diff | call OnDiffMode() | endif
-nnoremap <silent> ,,wm :call MaxWinAndSplit()<CR>
-nnoremap <silent> ,,wn :call RestoreWinAndSplit()<CR>
 
 "Diff
 function! DiffFiles()
@@ -871,11 +827,24 @@ nnoremap <silent> ,du :diffupdate<CR>
 function! DiffSwitchIwhite()
     if stridx(&diffopt, "iwhite") != -1
         set diffopt-=iwhite
+        set diffopt-=iblank
     else
         set diffopt+=iwhite
+        set diffopt+=iblank
     endif
 endfunction
 nnoremap <silent> ,di :call DiffSwitchIwhite()<CR>
+
+function! DiffSwitchAlgo()
+    if stridx(&diffopt, "algorithm:histogram") != -1
+        set diffopt-=algorithm:histogram
+        set diffopt+=algorithm:myers
+    else
+        set diffopt-=algorithm:myers
+        set diffopt+=algorithm:histogram
+    endif
+endfunction
+nnoremap <silent> ,da :call DiffSwitchAlgo()<CR>
 
 "clear space at the end of line
 function! ClearSpaceAtEOL()

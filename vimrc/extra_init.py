@@ -75,6 +75,7 @@ leaderf_ignore_init()
 def save_colorscheme():
     with open(vim.eval("$HOME") + "/.colorscheme", "w") as f:
         f.write("colorscheme " + vim.eval("g:colors_name") + "\n")
+        f.write("set bg=" + vim.eval("&bg") + "\n")
 
 
 def init_colorscheme():
@@ -88,18 +89,3 @@ def init_colorscheme():
 
 # load colorscheme when startup, and save colorscheme when exit
 init_colorscheme()
-
-def switch_background():
-    t = time.localtime()
-    bg = vim.eval('&bg')
-    if t.tm_hour >= 18 or t.tm_hour < 7:
-        bg = 'dark'
-    else:
-        bg = 'light'
-
-    if bg != vim.eval('&bg'):
-        vim.command(f'set bg={bg}')
-
-
-# switch background when startup
-switch_background()
