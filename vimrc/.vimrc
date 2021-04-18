@@ -510,6 +510,13 @@ let g:neoformat_tex_latexindent = {
         \ 'replace': 1
         \}
 
+let g:neoformat_enabled_markdown = ['mdformat']
+let g:neoformat_markdown_mdformat = {
+        \ 'exe': 'cmd.exe',
+        \ 'args': ['/c', 'mdformat.py'],
+        \ 'stdin': 1,
+        \}
+
 
 " doxygen
 nnoremap <silent> ,dx :Dox<CR>
@@ -1029,28 +1036,15 @@ else
     let g:ale_sign_warning = 'W'
 endif
 
-
-
-" latex for tagbar
-let g:tagbar_type_tex = {
-    \ 'ctagstype' : 'latex',
-    \ 'kinds'     : [
-        \ 's:sections',
-        \ 'g:graphics:0:0',
-        \ 'l:labels',
-        \ 'r:refs:1:0',
-        \ 'p:pagerefs:1:0'
-    \ ],
-    \ 'sort'    : 0,
-\ }
-
 " markdown for tagbar
+" create a markdown.ctags file in ~/.ctags.d/ and write text below into the file:
+" --langdef=md
+" --langmap=md:.md
+" --regex-md=/^(#+[ \t]+.*)/\1/h,Headings/ 
 let g:tagbar_type_markdown = {
-    \ 'ctagstype' : 'markdown',
+    \ 'ctagstype' : 'md',
     \ 'kinds'     : [
-        \ 'c:chapters',
-        \ 's:sections',
-        \ 'S:subsections'
+        \ 'h:Headings',
     \ ],
     \ 'sort'    : 0,
 \ }
@@ -1076,6 +1070,9 @@ let g:rainbow_active = 1
 
 " vim-markdown
 let g:markdown_enable_spell_checking = 0
+if &diff == 0
+    autocmd FileType markdown syntax clear markdownTableHeader | syntax clear markdownUrlLinkInText | syntax clear markdownTableDelimiter
+endif
 
 " gruvbox do not invert color in selection mode
 let g:gruvbox_invert_selection = 0
